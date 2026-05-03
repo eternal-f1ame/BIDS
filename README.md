@@ -1,4 +1,4 @@
-# BIDS — Bacterial IDentification under Spatial homogeneity
+# BIDS
 
 Code for the BIDS framework: open-world multi-label identification of mixed
 bacterial cultures from phase-contrast microscopy images. Three lightweight
