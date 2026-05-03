@@ -147,11 +147,11 @@ between runs to skip re-extraction when the key matches.
 ## Citation
 
 ```bibtex
-@inproceedings{bids2026,
+@misc{bids2026,
   title  = {BIDS: Bacterial IDentification under Spatial homogeneity},
-  author = {Anonymous},
-  booktitle = {Advances in Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track},
-  year   = {2026}
+  author = {Anonymous Authors},
+  year   = {2026},
+  note   = {Under review}
 }
 ```
 
