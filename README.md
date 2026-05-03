@@ -18,7 +18,8 @@ The repository contains:
 - The tooling that ingests raw video into the splits the paper uses, packages
   the dataset for release, and regenerates the paper figures (`tools/`).
 
-The dataset (~22 GB, CC BY 4.0) is hosted separately; the URL is in the paper.
+The dataset (~22 GB, CC BY 4.0) is hosted separately at
+https://huggingface.co/datasets/AnonymousResearchTiger/BIDS
 
 ## Install
 
