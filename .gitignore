@@ -1,0 +1,27 @@
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# Data and outputs (not tracked in the code repo)
+data/
+outputs/
+runs/
+wandb/
+
+# Model artifacts
+*.pt
+*.pth
+**/features_cache.pt
+**/features.pt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp

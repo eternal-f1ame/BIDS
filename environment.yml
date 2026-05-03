@@ -1,0 +1,26 @@
+name: bact
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  # numerics / io
+  - numpy
+  - scipy
+  - pillow
+  - scikit-learn
+  - tqdm
+  # viz
+  - matplotlib
+  - seaborn
+  # pytorch stack
+  - pytorch
+  - torchvision
+  # If you have an NVIDIA GPU + drivers, keep this; otherwise you can remove it.
+  - pytorch-cuda=12.1
+  - pip:
+      - timm
+      - opencv-python
+      - wandb
