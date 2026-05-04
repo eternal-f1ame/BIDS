@@ -112,7 +112,7 @@ def score_proto(cfg_path: Path, model_path: Path, tile_feats: torch.Tensor,
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--retakes_dir", type=str,
-                    default="data/real/augmented_retakes")
+                    default="data/images_retakes")
     ap.add_argument("--simplex_dir", type=str,
                     default="outputs/simplex_unmixing/6class")
     ap.add_argument("--proto_dir", type=str,

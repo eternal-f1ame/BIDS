@@ -8,7 +8,7 @@ preferred hosts):
     data/release/frames.tar.gz   — 40 combo folders, ~40,000 JPEGs
     data/release/videos.tar.gz   — 40 primary MP4 videos
     data/release/retakes.tar.gz  — 16 retake videos + 16,000 retake frames
-    data/release/splits.json     — copy of data/real/splits.json
+    data/release/splits.json     — copy of data/splits.json
 
 Each archive root contains the original folder name (frames/, videos/,
 retakes/) so that extraction with `tar xzf` produces the conventional

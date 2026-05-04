@@ -62,7 +62,7 @@ def calibrate_argmax_f1(scores: np.ndarray, labels: np.ndarray) -> np.ndarray:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--splits_path", type=str, default="data/real/splits.json")
+    ap.add_argument("--splits_path", type=str, default="data/splits.json")
     ap.add_argument("--output_dir", type=str, default="outputs/mc_channel/default")
     ap.add_argument("--backbone", type=str, default="vit_small_patch14_dinov2.lvd142m")
     ap.add_argument("--tile_size", type=int, default=224)

@@ -26,7 +26,7 @@ that is the right semantics for two recording sessions of the same mix.
 
 Output
 ------
-Writes `--output` (default `data/real/splits.json`):
+Writes `--output` (default `data/splits.json`):
 {
     "class_names": ["bs", "bt", "fj", "ka", "mx", "pf"],
     "train_frac": 0.80, "val_frac": 0.10, "test_frac": 0.10,
@@ -159,8 +159,8 @@ def build_splits(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build temporal train/val/test splits for real data.")
-    parser.add_argument("--frames_dir", type=Path, default=Path("data/real/frames"))
-    parser.add_argument("--output", type=Path, default=Path("data/real/splits.json"))
+    parser.add_argument("--frames_dir", type=Path, default=Path("data/images"))
+    parser.add_argument("--output", type=Path, default=Path("data/splits.json"))
     parser.add_argument("--train_frac", type=float, default=0.80)
     parser.add_argument("--val_frac", type=float, default=0.10)
     args = parser.parse_args()

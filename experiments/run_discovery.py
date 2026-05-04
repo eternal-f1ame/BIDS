@@ -673,7 +673,7 @@ def run_fold(
 # ---------------------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser(description="BIDS Pillar 3: NCD harness")
-    parser.add_argument("--splits_path", type=str, default="data/real/splits.json")
+    parser.add_argument("--splits_path", type=str, default="data/splits.json")
     parser.add_argument("--output_dir", type=str, default="outputs/discovery_loocv")
     parser.add_argument("--backbone", type=str, default="vit_small_patch14_dinov2.lvd142m")
 

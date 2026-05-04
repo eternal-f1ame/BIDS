@@ -45,7 +45,7 @@ def knn_score(test_features, test_image_index, num_test_images,
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--splits_path", default="data/real/splits.json")
+    ap.add_argument("--splits_path", default="data/splits.json")
     ap.add_argument("--feature_dir", default="outputs/openset_loocv/features")
     ap.add_argument("--output_dir", default="outputs/osr_score_sweep")
     ap.add_argument("--knn_k", type=int, default=10)

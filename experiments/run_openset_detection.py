@@ -262,7 +262,7 @@ def run_fold(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="BIDS Phase 6: LOOCV open-set harness")
-    parser.add_argument("--splits_path", type=str, default="data/real/splits.json")
+    parser.add_argument("--splits_path", type=str, default="data/splits.json")
     parser.add_argument("--output_dir", type=str, default="outputs/openset_loocv")
     parser.add_argument("--backbone", type=str, default="vit_small_patch14_dinov2.lvd142m")
 

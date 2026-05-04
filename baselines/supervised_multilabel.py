@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""End-to-end multilabel classification baseline on augmented images.
+"""End-to-end multilabel classification baseline on images.
 
 The honest "simple multilabel classification setup" for comparison against
-Borowa et al. (2022). Uses the augmented dataset in data/real/augmented/
+Borowa et al. (2022). Uses the dataset in data/images/
 (produced by tools/augment.py) and assigns labels by parsing each folder
 name (tokens separated by underscores).
 
 Pipeline:
-  1. Enumerate data/real/augmented/<combo>/*.jpg
+  1. Enumerate data/images/<combo>/*.jpg
   2. Random image-level 80/10/10 split (deterministic seed)
   3. Pretrained ResNet-50 backbone, replace the FC with nn.Linear(2048, K)
      and fine-tune end-to-end under BCEWithLogitsLoss
@@ -47,7 +47,7 @@ from src.common.metrics import per_sample_f1, macro_f1_per_class, exact_match_ac
 from tools.build_splits import parse_label_tokens, discover_class_names
 
 
-class AugmentedFramesDataset(Dataset):
+class ImagesDataset(Dataset):
     def __init__(self, paths: List[Path], labels: np.ndarray,
                  transform) -> None:
         self.paths = paths
@@ -64,7 +64,7 @@ class AugmentedFramesDataset(Dataset):
         return x, y
 
 
-def image_level_split(augmented_dir: Path, class_names: List[str],
+def image_level_split(frames_dir: Path, class_names: List[str],
                       seed: int, val_frac: float = 0.1, test_frac: float = 0.1,
                       ) -> Dict[str, List[Tuple[Path, np.ndarray]]]:
     """Random 80/10/10 image-level split across every image in the dataset."""
@@ -72,7 +72,7 @@ def image_level_split(augmented_dir: Path, class_names: List[str],
     K = len(class_names)
 
     entries: List[Tuple[Path, np.ndarray]] = []
-    for folder in sorted(augmented_dir.iterdir()):
+    for folder in sorted(frames_dir.iterdir()):
         if not folder.is_dir():
             continue
         tokens = parse_label_tokens(folder.name)
@@ -100,7 +100,7 @@ def _make_loader(entries: List[Tuple[Path, np.ndarray]], transform,
                  ) -> DataLoader:
     paths = [p for p, _ in entries]
     labels = np.stack([l for _, l in entries], axis=0)
-    ds = AugmentedFramesDataset(paths, labels, transform)
+    ds = ImagesDataset(paths, labels, transform)
     return DataLoader(ds, batch_size=batch_size, shuffle=shuffle,
                       num_workers=num_workers, pin_memory=True,
                       persistent_workers=num_workers > 0)
@@ -139,8 +139,8 @@ def evaluate(model, loader, device) -> Tuple[np.ndarray, np.ndarray]:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--augmented_dir", type=str,
-                    default="data/real/augmented")
+    ap.add_argument("--frames_dir", type=str,
+                    default="data/images")
     ap.add_argument("--output_dir", type=str,
                     default="outputs/supervised_multilabel/resnet50")
     ap.add_argument("--backbone", type=str, default="resnet50.a1_in1k")
@@ -157,18 +157,18 @@ def main() -> None:
     np.random.seed(args.seed)
     random.seed(args.seed)
 
-    aug_dir = ROOT / args.augmented_dir
+    frames_dir = ROOT / args.frames_dir
     out_dir = ROOT / args.output_dir
     out_dir.mkdir(parents=True, exist_ok=True)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Device: {device}")
 
-    class_names = discover_class_names(aug_dir)
+    class_names = discover_class_names(frames_dir)
     K = len(class_names)
     print(f"Class names ({K}): {class_names}")
 
-    splits = image_level_split(aug_dir, class_names, seed=args.seed)
+    splits = image_level_split(frames_dir, class_names, seed=args.seed)
     print(f"Splits: train={len(splits['train'])}  val={len(splits['val'])}  "
           f"test={len(splits['test'])}")
 

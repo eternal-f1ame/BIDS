@@ -125,7 +125,7 @@ def evaluate(model, loader, labels, num_images, tile_size, grid_size,
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--splits_path", default="data/real/splits.json")
+    ap.add_argument("--splits_path", default="data/splits.json")
     ap.add_argument("--output_dir", default="outputs/finetune_dinov2_bids")
     ap.add_argument("--backbone", default="vit_small_patch14_dinov2.lvd142m")
     ap.add_argument("--input_size", type=int, default=224)

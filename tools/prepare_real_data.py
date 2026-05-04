@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """One-shot real-data preparation: extract frames + build splits.
 
-Run this whenever new videos are dropped into `data/real/videos/`. It is fully
+Run this whenever new videos are dropped into `data/videos/`. It is fully
 idempotent — already-extracted videos are skipped, and the splits.json is
-rebuilt from the current state of `data/real/frames/`.
+rebuilt from the current state of `data/images/`.
 
     python tools/prepare_real_data.py
 
 Optional flags forward to the underlying scripts:
 
     python tools/prepare_real_data.py \
-        --video_dir data/real/videos \
-        --frames_dir data/real/frames \
-        --splits_path data/real/splits.json \
+        --video_dir data/videos \
+        --frames_dir data/images \
+        --splits_path data/splits.json \
         --n_frames 1000 \
         --train_frac 0.8 --val_frac 0.1
 """
@@ -31,9 +31,9 @@ from tools.extract_frames import extract_all  # noqa: E402
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Extract frames + build splits in one shot.")
-    parser.add_argument("--video_dir", type=Path, default=Path("data/real/videos"))
-    parser.add_argument("--frames_dir", type=Path, default=Path("data/real/frames"))
-    parser.add_argument("--splits_path", type=Path, default=Path("data/real/splits.json"))
+    parser.add_argument("--video_dir", type=Path, default=Path("data/videos"))
+    parser.add_argument("--frames_dir", type=Path, default=Path("data/images"))
+    parser.add_argument("--splits_path", type=Path, default=Path("data/splits.json"))
     parser.add_argument("--n_frames", type=int, default=1000)
     parser.add_argument("--train_frac", type=float, default=0.80)
     parser.add_argument("--val_frac", type=float, default=0.10)

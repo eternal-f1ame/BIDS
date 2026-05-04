@@ -95,7 +95,7 @@ def evaluate_with_transform(
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--splits_path", default="data/real/splits.json")
+    ap.add_argument("--splits_path", default="data/splits.json")
     ap.add_argument("--method_b_dir", default="outputs/prototype_matching/6class_v2")
     ap.add_argument("--output_dir", default="outputs/ablations/invariance")
     args = ap.parse_args()

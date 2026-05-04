@@ -162,7 +162,7 @@ def run_fold(held_out, class_names, train_labels, train_videos,
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--splits_path", default="data/real/splits.json")
+    ap.add_argument("--splits_path", default="data/splits.json")
     ap.add_argument("--feature_dir", default="outputs/openset_loocv/features")
     ap.add_argument("--output_dir", default="outputs/osr_score_sweep")
     ap.add_argument("--temperature", type=float, default=10.0)

@@ -3,7 +3,7 @@
 
 Pipeline
 --------
-1. Load train + val splits from `data/real/splits.json` (built by tools/build_splits.py).
+1. Load train + val splits from `data/splits.json` (built by tools/build_splits.py).
 2. Tile every frame at full resolution (Assumption H makes tiles label-preserving) and
    extract DINOv2 features once. Optional illumination normalization is applied to the
    full-resolution image before tiling.
@@ -89,7 +89,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Train Method A: Simplex Unmixing")
 
     # data
-    parser.add_argument("--splits_path", type=str, default="data/real/splits.json")
+    parser.add_argument("--splits_path", type=str, default="data/splits.json")
     parser.add_argument("--output_dir", type=str, default="outputs/simplex_unmixing/default")
     parser.add_argument("--max_train_images", type=int, default=None)
     parser.add_argument("--max_val_images", type=int, default=None)

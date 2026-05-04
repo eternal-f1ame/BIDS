@@ -6,8 +6,8 @@ Idempotent: skips any video whose output folder already contains at least
 next run; existing extractions are not touched.
 
 Default I/O matches the BIDS layout:
-    inputs : data/real/videos/*.mp4
-    outputs: data/real/frames/<video_name>/frame_NNNN.jpg
+    inputs : data/videos/*.mp4
+    outputs: data/images/<video_name>/frame_NNNN.jpg
 
 Folder names encode multilabel via underscore separation: a video named
 `b_f_k.mp4` produces a folder `b_f_k/` whose label vector is `{b, f, k}`.
@@ -143,8 +143,8 @@ def extract_all(video_dir: Path, output_dir: Path, n_frames: int,
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Extract frames from bacterial culture videos.")
-    parser.add_argument("--video_dir", type=Path, default=Path("data/real/videos"))
-    parser.add_argument("--output_dir", type=Path, default=Path("data/real/frames"))
+    parser.add_argument("--video_dir", type=Path, default=Path("data/videos"))
+    parser.add_argument("--output_dir", type=Path, default=Path("data/images"))
     parser.add_argument("--n_frames", type=int, default=1000)
     parser.add_argument("--force", action="store_true",
                         help="Re-extract even if the output folder already has enough frames.")

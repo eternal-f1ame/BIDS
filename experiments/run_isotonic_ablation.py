@@ -97,7 +97,7 @@ def main() -> None:
     ap.add_argument("--proto_dir", type=str,
                     default="outputs/prototype_matching/6class")
     ap.add_argument("--splits_path", type=str,
-                    default="data/real/splits.json")
+                    default="data/splits.json")
     ap.add_argument("--output_dir", type=str,
                     default="outputs/isotonic_ablation")
     args = ap.parse_args()

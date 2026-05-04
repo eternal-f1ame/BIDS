@@ -79,13 +79,13 @@ def _tokens_in(combos):
     return s
 
 
-def select_heldout(augmented_dir: Path, seed: int,
+def select_heldout(frames_dir: Path, seed: int,
                    class_names: List[str], heldout_counts: dict,
                    ) -> Tuple[List[str], List[str], dict]:
     """Pick combinations to hold out, ensuring that every one of the K species
     still appears in at least one TRAINED combination. Re-rolls seeds until
     coverage holds (usually succeeds on seed 0)."""
-    folders = sorted([f.name for f in augmented_dir.iterdir() if f.is_dir()])
+    folders = sorted([f.name for f in frames_dir.iterdir() if f.is_dir()])
     by_order = defaultdict(list)
     for name in folders:
         tokens = parse_label_tokens(name)
@@ -97,12 +97,12 @@ def select_heldout(augmented_dir: Path, seed: int,
         heldout: List[str] = []
         for order, count in heldout_counts.items():
             if order not in by_order:
-                raise SystemExit(f"No combinations of order {order} in {augmented_dir}")
+                raise SystemExit(f"No combinations of order {order} in {frames_dir}")
             pool = sorted(by_order[order])
             if len(pool) < count:
                 raise SystemExit(
                     f"Need to hold out {count} combinations of order {order} but "
-                    f"only {len(pool)} exist in {augmented_dir}")
+                    f"only {len(pool)} exist in {frames_dir}")
             rng.shuffle(pool)
             heldout.extend(pool[:count])
         # Drop from training any folder whose label set duplicates a held-out
@@ -148,7 +148,7 @@ class ImagesDataset(Dataset):
         return x, y
 
 
-def collect_entries(augmented_dir: Path, combos: List[str],
+def collect_entries(frames_dir: Path, combos: List[str],
                     class_names: List[str]) -> List[Tuple[Path, np.ndarray, str]]:
     cls_to_idx = {c: i for i, c in enumerate(class_names)}
     K = len(class_names)
@@ -159,7 +159,7 @@ def collect_entries(augmented_dir: Path, combos: List[str],
         for t in tokens:
             if t in cls_to_idx:
                 label[cls_to_idx[t]] = 1
-        for img in sorted((augmented_dir / combo).glob("*.jpg")):
+        for img in sorted((frames_dir / combo).glob("*.jpg")):
             out.append((img, label, combo))
     return out
 
@@ -215,8 +215,8 @@ def evaluate(model, loader, device):
 # ----------------------------------------------------------------------------
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--augmented_dir", type=str,
-                    default="data/real/augmented_256")
+    ap.add_argument("--frames_dir", type=str,
+                    default="data/images_256")
     ap.add_argument("--output_dir", type=str,
                     default="outputs/supervised_multilabel_heldout/resnet50")
     ap.add_argument("--backbone", type=str, default="resnet50.a1_in1k")
@@ -239,7 +239,7 @@ def main() -> None:
     np.random.seed(args.seed)
     random.seed(args.seed)
 
-    aug_dir = ROOT / args.augmented_dir
+    frames_dir = ROOT / args.frames_dir
     out_dir = ROOT / args.output_dir
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -248,7 +248,7 @@ def main() -> None:
 
     class_names = discover_class_names(aug_dir)
     K = len(class_names)
-    heldout, trained, by_order = select_heldout(aug_dir, seed=args.seed,
+    heldout, trained, by_order = select_heldout(frames_dir, seed=args.seed,
                                                  class_names=class_names,
                                                  heldout_counts=heldout_counts)
 
@@ -258,8 +258,8 @@ def main() -> None:
           f"{[c for c in trained[:6]]}... ({len(trained) - 6} more)")
 
     # Build entries
-    trained_entries = collect_entries(aug_dir, trained, class_names)
-    heldout_entries = collect_entries(aug_dir, heldout, class_names)
+    trained_entries = collect_entries(frames_dir, trained, class_names)
+    heldout_entries = collect_entries(frames_dir, heldout, class_names)
     train_entries, val_entries = image_level_90_10(trained_entries, seed=args.seed)
 
     print(f"train={len(train_entries)}  val={len(val_entries)}  "

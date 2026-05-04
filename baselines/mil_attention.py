@@ -388,8 +388,8 @@ def run_heldout(args, device: str):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--protocol", default="both", choices=["random", "heldout", "both"])
-    ap.add_argument("--splits_path", default="data/real/splits.json")
-    ap.add_argument("--frames_dir", default="data/real/augmented")
+    ap.add_argument("--splits_path", default="data/splits.json")
+    ap.add_argument("--frames_dir", default="data/images")
     ap.add_argument("--output_dir", default="outputs/mil_attention")
     ap.add_argument("--heldout_counts", default="")
     ap.add_argument("--epochs", type=int, default=30)

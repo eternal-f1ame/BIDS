@@ -27,7 +27,7 @@ from src.mc_channel.model import MCChannelHead, MCConfig
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--splits_path", default="data/real/splits.json")
+    ap.add_argument("--splits_path", default="data/splits.json")
     ap.add_argument("--model_dir", required=True)
     ap.add_argument("--frame_batch_size", type=int, default=8)
     ap.add_argument("--num_workers", type=int, default=2)

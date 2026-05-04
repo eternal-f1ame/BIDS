@@ -363,7 +363,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--models", nargs="+",
                     default=[tag for tag, _, _ in BIO_MODELS])
-    ap.add_argument("--splits_path", default="data/real/splits.json")
+    ap.add_argument("--splits_path", default="data/splits.json")
     ap.add_argument("--tile_size",   type=int, default=224)
     ap.add_argument("--eval_grid_size", type=int, default=4)
     ap.add_argument("--frame_batch_size", type=int, default=8)

@@ -3,7 +3,7 @@
 
 Pipeline (mirrors Method A so the two are directly comparable)
 --------------------------------------------------------------
-1. Load train + val splits from `data/real/splits.json`.
+1. Load train + val splits from `data/splits.json`.
 2. Tile every frame at full resolution and extract DINOv2 features once. Optional
    illumination normalization happens on the GPU before tiling.
 3. Initialize prototypes from pure-culture videos when available (mean of tile
@@ -76,7 +76,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Train Method B: Prototype Matching")
 
     # data
-    parser.add_argument("--splits_path", type=str, default="data/real/splits.json")
+    parser.add_argument("--splits_path", type=str, default="data/splits.json")
     parser.add_argument("--output_dir", type=str, default="outputs/prototype_matching/default")
     parser.add_argument("--max_train_images", type=int, default=None)
     parser.add_argument("--max_val_images", type=int, default=None)

@@ -119,7 +119,7 @@ def train_with_repulsion(
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--frames_dir", default="data/real/augmented")
+    ap.add_argument("--frames_dir", default="data/images")
     ap.add_argument("--output_dir", default="outputs/repulsion_ablation")
     ap.add_argument("--backbone", default="vit_small_patch14_dinov2.lvd142m")
     ap.add_argument("--tile_size", type=int, default=224)

@@ -414,7 +414,7 @@ def render_latex_table(csv_path: str, tex_path: str) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--splits_path", default="data/real/splits.json")
+    p.add_argument("--splits_path", default="data/splits.json")
     p.add_argument("--output_dir", default="outputs/encoder_probe")
     p.add_argument("--tex_path", default="NeurIPS_Template/tables/tab_encoder_probe.tex")
 

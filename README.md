@@ -49,13 +49,11 @@ All three reuse the same shared front-end:
 ## Data layout
 
 ```
-data/real/
-├── videos/                                   # 40 primary .mp4
-├── videos_retakes/                           # 16 cross-session retakes (filenames end _takeN)
-├── augmented/<combo>/00001.jpg               # 1024×1024 augmented crops (~120,000 total)
-├── augmented_retakes/<combo>_takeN/00001.jpg # augmented retake crops (~48,000 total)
-├── augmented_256/<combo>/00001.jpg           # 256×256 downsampled (supervised baselines only)
-└── splits.json                               # temporal 80/10/10, paths → augmented/
+data/
+├── images/<combo>/00001.jpg             # 1024×1024 images (~120,000 total)
+├── images_retakes/<combo>_takeN/        # retake images (~48,000 total)
+├── images_256/<combo>/00001.jpg         # 256×256 downsampled (supervised baselines only)
+└── splits.json                          # temporal 80/10/10, paths → images/
 ```
 
 Filenames encode the label: `bs_ka_fj.mp4` → `[bs, ka, fj]` present. Six
@@ -69,10 +67,10 @@ collected and are absent from the release.
 | `bt`  | *Bacillus thermoamylovorans*  | `ka`  | *Klebsiella aerogenes*   |
 | `fj`  | *Flavobacterium johnsoniae*   | `pf`  | *Pseudomonas fluorescens*|
 
-The HF dataset archive already contains the 1024×1024 augmented crops at
-`augmented/<combo>/00001.jpg` and the matching `splits.json`. Unpack the
-archive next to this code (or pass `--frames_dir`/`--splits_path` to the
-experiment scripts to point at any other location).
+The HF dataset archive contains the 1024×1024 images at
+`images/<combo>/00001.jpg` and the matching `splits.json`. Extract
+`images.tar.gz` under `data/` next to this code (or pass
+`--frames_dir`/`--splits_path` to point at any other location).
 
 ## Quick start
 

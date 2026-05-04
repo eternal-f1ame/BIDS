@@ -110,7 +110,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Presence detection on the real-data test split.")
     parser.add_argument("--method", choices=["simplex", "prototype"], required=True)
     parser.add_argument("--model_dir", type=str, required=True)
-    parser.add_argument("--splits_path", type=str, default="data/real/splits.json")
+    parser.add_argument("--splits_path", type=str, default="data/splits.json")
     parser.add_argument("--split", type=str, default="test", choices=["train", "val", "test"])
     parser.add_argument("--output_dir", type=str, default=None)
     parser.add_argument("--batch_size", type=int, default=64)

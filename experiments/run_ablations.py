@@ -751,7 +751,7 @@ def _render_tile_count_tex(path: Path, rows: List[Dict[str, Any]]) -> None:
 
 
 def _add_common(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--splits_path", type=str, default="data/real/splits.json")
+    parser.add_argument("--splits_path", type=str, default="data/splits.json")
     parser.add_argument("--output_dir", type=str, default="outputs/ablations")
     parser.add_argument("--backbone", type=str, default="vit_small_patch14_dinov2.lvd142m")
     parser.add_argument("--illumination", type=str, default="divide", choices=["divide", "subtract", "none"])
