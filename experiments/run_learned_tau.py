@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Per-class learnable temperature ablation for Method A.
+"""Tier 2C ablation: adaptive per-class temperature τ for Method A.
 
-Runs Method A on the leave-9-combinations-out protocol with two settings:
-fixed scalar tau = 10 vs K = 6 per-class log-temperatures learned end-to-end
-through the reconstruction MSE. Three seeds (1337/1338/1339); reports val F1,
-held-out F1, and delta F1 per variant plus the learned tau values per class.
+Runs Method A on the leave-9-combinations-out protocol with fixed τ=10
+and learned per-class τ (K=6 nn.Parameters, log-space), for seeds
+1337/1338/1339. Reports val F1, heldout F1, and Δ F1 for both variants,
+and prints the learned τ values per class.
 
 Output: outputs/learned_tau_ablation/results.json
 """
@@ -101,7 +101,7 @@ def train_method_a(
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--frames_dir", default="data/real/frames")
+    ap.add_argument("--frames_dir", default="data/real/augmented")
     ap.add_argument("--output_dir", default="outputs/learned_tau_ablation")
     ap.add_argument("--backbone", default="vit_small_patch14_dinov2.lvd142m")
     ap.add_argument("--tile_size", type=int, default=224)

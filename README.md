@@ -50,16 +50,18 @@ All three reuse the same shared front-end:
 
 ```
 data/real/
-├── videos/                          # 40 primary .mp4
-├── videos_retakes/                  # 16 cross-session retakes (filenames end _takeN)
-├── frames/<combo>/frame_XXXX.jpg    # extracted primary frames
-├── frames_retakes/<combo>_takeN/... # extracted retake frames
-└── splits.json                      # video-level random 80/10/10
+├── videos/                                   # 40 primary .mp4
+├── videos_retakes/                           # 16 cross-session retakes (filenames end _takeN)
+├── augmented/<combo>/00001.jpg               # 1024×1024 augmented crops (~120,000 total)
+├── augmented_retakes/<combo>_takeN/00001.jpg # augmented retake crops (~48,000 total)
+├── augmented_256/<combo>/00001.jpg           # 256×256 downsampled (supervised baselines only)
+└── splits.json                               # temporal 80/10/10, paths → augmented/
 ```
 
 Filenames encode the label: `bs_ka_fj.mp4` → `[bs, ka, fj]` present. Six
 species in 40 combinations of orders 1 to 6; three pairwise combinations
-(`bs+bt`, `bt+fj`, `ka+pf`) failed to plate stably and are excluded by biology.
+(`bs+bt`, `bt+fj`, `ka+pf`) and the five-species combinations were not
+collected and are absent from the release.
 
 | Token | Species                       | Token | Species                  |
 |-------|-------------------------------|-------|--------------------------|
@@ -67,11 +69,10 @@ species in 40 combinations of orders 1 to 6; three pairwise combinations
 | `bt`  | *Bacillus thermoamylovorans*  | `ka`  | *Klebsiella aerogenes*   |
 | `fj`  | *Flavobacterium johnsoniae*   | `pf`  | *Pseudomonas fluorescens*|
 
-Once the dataset archives are unpacked, build the splits with:
-
-```bash
-python tools/prepare_real_data.py
-```
+The HF dataset archive already contains the 1024×1024 augmented crops at
+`augmented/<combo>/00001.jpg` and the matching `splits.json`. Unpack the
+archive next to this code (or pass `--frames_dir`/`--splits_path` to the
+experiment scripts to point at any other location).
 
 ## Quick start
 

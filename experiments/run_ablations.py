@@ -1,27 +1,33 @@
 #!/usr/bin/env python3
-"""Ablation harness for the BIDS tile pipeline.
+"""Ablation harness for BIDS — real-data tile pipeline.
 
-Subcommands:
+Each subcommand produces one paper table:
 
-    tile_count     T in {1, 4, 8, 16, 32}
-    tile_size      s in {168, 224, 336, 518}
-    illumination   none / subtract / divide
-    projection     sparsemax vs softmax  (Method A only)
-    threshold      q in {0.01, 0.05, 0.10, 0.20}
-    proto_init     pure-culture vs k-means
+    tile_count     ->  tab_tile_sweep.tex   (T in {1,4,8,16,32})
+    tile_size      ->  tab_ablations.tex    (s in {168, 224, 336, 518})  [section]
+    illumination   ->  tab_ablations.tex    (none / subtract / divide)   [section]
+    projection     ->  tab_ablations.tex    (sparsemax vs softmax)       [section, A only]
+    threshold      ->  tab_ablations.tex    (q in {0.01, 0.05, 0.10, 0.20}) [section]
+    proto_init     ->  tab_proto_init.tex   (pure-culture vs k-means)
 
-Feature caches are keyed on (paths, tile_config, backbone, illumination, sigma).
-Ablations that only change downstream knobs (threshold quantile, projection
-function, init method, tile count via subsampling) reuse cached features;
-those that change tile size or illumination re-extract into a sweep-local cache.
+Design
+------
+The expensive steps are (1) decoding JPEGs, (2) illumination normalization, and (3)
+DINOv2 forward. Both methods' feature caches (train_features_cache.pt,
+val_features_cache.pt, and a test cache built here) are keyed on
+(paths, tile_config, backbone, illumination, sigma). When an ablation changes only
+a downstream knob (threshold quantile, projection function, init method, tile count
+via subsampling), we reuse features; when it changes tile size or illumination we
+re-extract into a sweep-local cache.
 
 Each subcommand writes:
     outputs/ablations/<sweep>/results.csv
     outputs/ablations/<sweep>/results.json
-    outputs/ablations/<sweep>/table_body.tex
+    outputs/ablations/<sweep>/table_body.tex   # rows ready to splice into the paper
 
-The reference config matches the train-time defaults: tile_size=224,
-eval_grid_size=4, illum=divide, sigma=64, temperature=10, calibrate_quantile=0.05.
+The reference config mirrors the defaults in src.simplex_unmixing.train and
+src.prototype_matching.train: tile_size=224, eval_grid_size=4, illum=divide,
+sigma=64, temperature=10, calibrate_quantile=0.05.
 """
 
 import argparse

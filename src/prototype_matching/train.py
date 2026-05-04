@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
-"""Build Method B (prototype matching) on the real bacterial dataset.
+"""Train Method B — Prototype Matching — on the real bacterial dataset.
 
-Closed-form: prototypes initialise from pure-culture videos (or K-means fallback),
-val-tile cosine similarities aggregate to image level by mean, and per-class presence
-plus a low-similarity unknown threshold calibrate on val. No gradient training.
+Pipeline (mirrors Method A so the two are directly comparable)
+--------------------------------------------------------------
+1. Load train + val splits from `data/real/splits.json`.
+2. Tile every frame at full resolution and extract DINOv2 features once. Optional
+   illumination normalization happens on the GPU before tiling.
+3. Initialize prototypes from pure-culture videos when available (mean of tile
+   features per single-species video), else fall back to K-means on the tile pool.
+4. No gradient learning — Method B is closed-form. Compute val tile similarities,
+   aggregate to image level by mean, calibrate per-class thresholds and the unknown
+   threshold on the val split.
+5. Save model + config + thresholds.
 
-Decision rule:
+Method B differs from Method A only in the decision rule:
     presence_k(x) = 1[ s_k(x) > theta_k^B ]   (mean cosine similarity > threshold)
     unknown(x)   = 1[ m(x)   < theta_unk^B ]  (mean max-similarity below threshold)
 """

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Presence detection on the real-data test split.
 
-Loads a trained model (Method A or B), extracts tile features on the test split
-with the exact tile / illumination config saved at train time, aggregates to
-image level, applies val-calibrated per-class thresholds, and reports per-sample
-F1, macro F1, per-class F1, and exact match.
+Loads a trained model (either simplex_unmixing or prototype_matching), extracts
+tile features on the test split with the exact tile/illumination config used at
+train time, aggregates to image level, applies val-calibrated per-class
+thresholds, and reports per-sample F1, macro F1, per-class F1, and exact match.
+
+Outputs the headline numbers that populate tab_headline.tex / tab_per_class.tex.
 """
 
 import argparse

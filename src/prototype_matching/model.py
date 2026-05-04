@@ -26,10 +26,19 @@ Decisions
     Presence:    y_hat_k(x) = 1[ s_k(x) > theta_k^B ]             (per-class threshold)
     Unknown:     u_hat(x)   = 1[ m(x)   < theta_unk^B ]           (low-similarity threshold)
 
-Note the asymmetry with Method A: high *residual* signals unknown for A; low
-*similarity* signals unknown for B. Both reduce to "the embedding does not look like
-anything matched by an existing prototype." See `train.py` for the calibration
-procedure.
+Note the asymmetry with Method A: high *residual* signals unknown for A; low *similarity*
+signals unknown for B. Both reduce to "the embedding does not look like anything we have
+a prototype for."
+
+Training procedure
+------------------
+1. Tile every frame in the training split (Assumption H makes tiles label-preserving).
+2. Initialize P:
+     - if pure-culture videos exist for class k, P_k = mean of tile embeddings in those videos
+     - else, K-means on tile embeddings (fall-back when no pure cultures available).
+3. Compute s_k(x) for each frame in the validation split.
+4. Calibrate per-class thresholds theta_k^B at a low quantile of positive-image similarities.
+5. Calibrate theta_unk^B = quantile_{0.05}( m(x) for x in val_known ).
 """
 from dataclasses import dataclass, field
 from typing import List, Optional, Tuple

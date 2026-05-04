@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
-"""End-to-end DINOv2-S/14 fine-tune through the BIDS GPU pipeline, under the
-leave-combinations-out protocol.
+"""End-to-end fine-tuning of DINOv2-S/14 through the BIDS GPU pipeline,
+under the leave-combinations-out protocol used by
+baselines/supervised_multilabel_heldout.py.
 
-Workers JPEG-decode raw uint8 frames at 2592x1944; illumination correction,
-4x4 grid tile slicing, ImageNet normalization, and DINOv2 forward (with gradient)
-all run on the GPU. Held-out 9 combinations (1 single / 2 pairs / 3 triples /
-2 quadruples / 1 six-species at seed 1337) form the entire test set; trained-on
-combos split image-level 90/10 train/val.
+Same training pipeline as baselines/finetune_dinov2_bids.py:
+  workers JPEG-decode raw uint8 frames at 2592x1944; illumination correction,
+  4x4 grid tile slicing, ImageNet normalization, and DINOv2 forward (with
+  gradient) all run on the GPU.
+
+Same heldout split as baselines/supervised_multilabel_heldout.py:
+  9 held-out combinations (1 single / 2 pairs / 3 triples / 2 quadruples /
+  1 six-species), trained-on combos split image-level 90/10 train/val,
+  the 9 held-out combos form the entire test set.
+
+Outputs to outputs/finetune_dinov2_bids_heldout/<run>/{model.pt,results.json,
+summary.md,test_scores.npy,test_labels.npy}.
 """
 from __future__ import annotations
 
@@ -80,7 +88,7 @@ def image_level_90_10(entries, seed: int):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--frames_dir", default="data/real/frames",
+    ap.add_argument("--frames_dir", default="data/real/augmented",
                     help="Native-resolution frame folders, one per combination.")
     ap.add_argument("--output_dir", default="outputs/finetune_dinov2_bids_heldout/dinov2_s14")
     ap.add_argument("--backbone", default="vit_small_patch14_dinov2.lvd142m")

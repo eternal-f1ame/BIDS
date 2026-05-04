@@ -1,30 +1,39 @@
 #!/usr/bin/env python3
-"""LOOCV novel-class discovery harness for BIDS.
+"""Pillar 3 of BIDS: Novel Class Discovery (LOOCV protocol).
 
-For each held-out species k: train Method A on the remaining K-1 species
-(pure-culture init); forward the test split through the K-1 model; tiles whose
-residual norm exceeds `theta_disc` are flagged as novel candidates; cluster
-those residuals (greedy cosine, Sinkhorn-Knopp, or Cr-KD-NCD's variant) to
-propose a set of new prototypes; rebuild the full prototype matrix
-[K-1 known | N_proposed] and re-score the test split.
+For each held-out species k:
+  1. Train Method A on K-1 known species (pure-culture init, like the LOOCV
+     open-set harness in run_openset_detection.py).
+  2. Forward the FULL test split through the K-1 model. Tiles whose residual
+     norm exceeds `theta_disc` are flagged as "novel" candidates.
+  3. Run greedy cosine clustering on the novel-candidate residuals to PROPOSE
+     a set of new prototypes (size variable, controlled by `cluster_similarity`
+     and `min_cluster_size`).
+  4. Build the full prototype matrix [K-1 known | N_proposed] and re-score the
+     test split: each tile -> argmax cosine sim against every prototype.
+  5. Per image, the tile-mode prediction is its label (an integer in
+     [0, K-1+N_proposed)).
 
-Per-fold metrics:
-  - discovery_recall  : fraction of held-out test images assigned to any new
-                        prototype (correctly flagged as not in the K-1 known set).
-  - discovery_purity  : of those flagged, fraction landing on the single most-
-                        popular new prototype (Hungarian collapses to argmax
-                        with one held-out class).
-  - cluster_accuracy  : recall * purity (the headline NCD number).
-  - n_proposed_protos : count of novel prototypes proposed (~1 per held-out
-                        class is ideal).
-  - drift_known_f1_delta : per-class F1 change on the K-1 known species before
-                        and after appending the new prototypes (negative = the
-                        new prototypes hurt known-class performance).
+Metrics, per fold:
+  - discovery_recall: fraction of held-out test images assigned to ANY of the
+    N_proposed new prototypes (i.e., correctly flagged as "not in the K-1
+    known set"). This is the closed-form analogue of NCD's clustering-recall.
+  - discovery_purity: of the held-out images correctly flagged, what fraction
+    land on the SINGLE most-popular new prototype. Hungarian match collapses
+    to argmax with 1 held-out class.
+  - cluster_accuracy: discovery_recall * discovery_purity. The headline NCD
+    number.
+  - n_proposed_protos: how many novel prototypes the discovery primitive
+    proposed (interpretable signal: ~1 per held-out class is ideal).
+  - drift_known_f1_delta: per-class F1 on the K-1 known species, with and
+    without the appended new prototypes. Negative = the new prototypes hurt
+    known-class performance.
 
 Aggregates mean +/- std across the K folds to
-`outputs/discovery_loocv/summary.{csv,json}`. Pass `--sweep_thresholds` to
-emit a Pareto curve over `residual_threshold` for the discovery / drift
-tradeoff.
+outputs/discovery_loocv/summary.{csv,json}.
+
+Optional: --sweep_thresholds emits a Pareto curve over residual_threshold
+(theta_disc) for each fold so we can plot discovery vs drift tradeoff.
 """
 
 import argparse

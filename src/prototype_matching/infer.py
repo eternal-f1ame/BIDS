@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """Run Method B inference at the image level.
 
-Reads tile features (with illumination + tiling config saved at train time), forwards
-PrototypeMatchingModel per tile, aggregates per-tile (similarities, max_sim) to image
-level by scatter-mean (Assumption H), then applies per-class presence and unknown
-thresholds. Writes per-image results to CSV + JSON.
+For each input image:
+  1. Apply illumination normalization (using config saved at train time).
+  2. Tile into a deterministic eval_grid_size x eval_grid_size grid.
+  3. DINOv2 forward each tile.
+  4. PrototypeMatchingModel forward each tile -> per-tile (similarities, max_sim).
+  5. Aggregate to image level via scatter_mean (Assumption H).
+  6. Apply per-class presence thresholds and the unknown threshold.
+  7. Write CSV + JSON with image-level results.
 """
 
 import argparse

@@ -21,7 +21,7 @@ def _load_dinov2(
 
     ViTs (DINOv2/v3, CLIP, SigLIP, EVA-02) accept `img_size=` and interpolate
     positional embeddings. CNNs (ResNet, ConvNeXt) and hybrid backbones (DaViT)
-    do not; the loader falls back to the default input size for those.
+    do not; we fall back to the default input size.
     """
     kwargs = {"pretrained": True}
     if img_size is not None:
@@ -203,7 +203,8 @@ def extract_features_multicrop_gpu(
     image_index = torch.empty((total_tiles,), dtype=torch.long)
     idx_ptr = 0
 
-    # Grid offsets only depend on (H, W); cache lazily on first batch.
+    # Pre-compute grid offsets — they only depend on the (fixed) frame size, but we
+    # do not assume that until we see the first batch.
     grid_offsets_cache = {}
 
     with torch.no_grad():

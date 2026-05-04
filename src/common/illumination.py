@@ -7,7 +7,7 @@ hotspot as a feature.
 
 Model
 -----
-Pixel intensity factorizes as
+We assume the observed pixel intensity factorizes as
 
     I_obs(c, x, y) = G(c, x, y) * I_true(c, x, y)
 
@@ -17,9 +17,8 @@ which to first order is proportional to G. Dividing by this estimate produces
 
     I_corr(c, x, y) ≈ I_true(c, x, y) / <I_true(c, x, y)>_local
 
-i.e. a contrast-normalized image where the gain has been removed. The result is
-rescaled by the global background mean to keep it in roughly the original intensity
-range.
+i.e. a contrast-normalized image where the gain has been removed. We then rescale by
+the global background mean to keep the result in roughly the original intensity range.
 
 Why per-channel
 ---------------
@@ -32,6 +31,8 @@ Why sigma = 64 (default)
 The hotspot has a length scale of several hundred pixels at native 2592x1944
 resolution; cells are 5-20 pixels. A 64-pixel Gaussian removes the hotspot (its energy
 lives at frequencies far below 1/64 cycles/pixel) without flattening individual cells.
+This is the bandlimit Bayesian-deconvolution baseline used in PlantCLEF/AnimalCLEF
+preprocessing pipelines.
 """
 
 from typing import Optional
@@ -46,10 +47,11 @@ from scipy.ndimage import gaussian_filter
 def _gaussian_2d_fast(channel: np.ndarray, sigma: float, downsample: int) -> np.ndarray:
     """Equivalent to gaussian_filter(channel, sigma) but ~50-100x faster for large sigma.
 
-    Downsample by `downsample`, blur on the small image with sigma/downsample, upsample
-    back. Uses PIL.Image.resize (bilinear) for the resamples (faster than
-    scipy.ndimage.zoom on 2592x1944 frames). Visually indistinguishable for estimating
-    a slow-varying illumination field; FLOPs scale as 1/downsample^2.
+    Trick: downsample by `downsample`, blur on the small image with sigma/downsample,
+    upsample back. Uses PIL.Image.resize (bilinear) for the resamples — much faster
+    than scipy.ndimage.zoom on our 2592x1944 frames. The result is visually
+    indistinguishable for our use case (estimating a slow-varying illumination field)
+    and the FLOPs scale as 1/downsample^2.
     """
     if downsample <= 1:
         return gaussian_filter(channel, sigma=sigma, mode="reflect")

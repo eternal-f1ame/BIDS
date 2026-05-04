@@ -1,16 +1,22 @@
 #!/usr/bin/env python3
 """Run BIDS Methods A, B, C in the leave-combinations-out regime.
 
-Same held-out protocol as the supervised LCO baselines: 9 held-out combinations
-(1 single / 2 pairs / 3 triples / 2 quadruples / 1 six-species at seed 1337);
-the 31 trained-on combos split image-level 90/10 train/val and the 9 held-out
-combos form the entire test set.
+Same heldout protocol as baselines/supervised_multilabel_heldout.py and
+baselines/finetune_dinov2_bids_heldout.py:
+  - 9 held-out combinations (1 single / 2 pairs / 3 triples / 2 quadruples /
+    1 six-species), seed 1337.
+  - 31 trained-on combos -> image-level 90/10 split for train/val.
+  - Held-out combos form the entire test set.
 
-Methods A and B are closed-form over cached tile features. Method C trains its
-390-parameter channel-grouped head for 30 epochs. When the held-out class has
-no pure-culture combo in the trained set, the prototype init falls back to the
-mean of tile features over images whose label *contains* that class (a
-contaminated init, symmetric to what the supervised baseline sees).
+Methods A and B are closed-form on cached tile features. Method C trains a
+390-parameter channel-grouped head for 30 epochs.
+
+Hybrid prototype init: pure-culture mean for trained-on singletons + mean of
+tile features from images containing that species for the held-out singleton
+(which has no pure-culture combo in the trained set). This is symmetric to
+what the supervised baseline sees.
+
+Outputs to outputs/bids_heldout/{results.json, summary.md, per_combo.csv}.
 """
 from __future__ import annotations
 
@@ -314,7 +320,7 @@ def run_method_c(
 # ---------------------------------------------------------------------------
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--frames_dir", default="data/real/frames")
+    ap.add_argument("--frames_dir", default="data/real/augmented")
     ap.add_argument("--output_dir", default="outputs/bids_heldout")
     ap.add_argument("--backbone", default="vit_small_patch14_dinov2.lvd142m")
     ap.add_argument("--tile_size", type=int, default=224)

@@ -1,12 +1,28 @@
 #!/usr/bin/env python3
-"""Train Method A (simplex unmixing) on the real bacterial dataset.
+"""Train Method A — Simplex Unmixing — on the real bacterial dataset.
 
-Trains UnmixerModel on per-tile reconstruction MSE with no entropy regularizer:
-sparsemax already enforces sparsity, and a +lambda*H(w) prior pushes weights toward
-uniform and fights the projection. Prototypes initialise from pure-culture videos when
-available (one per class), falling back to K-means on the tile pool. Tile predictions
-aggregate to image level by scatter-mean (justified by Assumption H), and per-class
-presence thresholds plus the residual unknown threshold are calibrated on val.
+Pipeline
+--------
+1. Load train + val splits from `data/real/splits.json` (built by tools/build_splits.py).
+2. Tile every frame at full resolution (Assumption H makes tiles label-preserving) and
+   extract DINOv2 features once. Optional illumination normalization is applied to the
+   full-resolution image before tiling.
+3. Initialize prototypes from pure-culture videos when available (mean of tile features
+   per single-species video), else fall back to K-means on the tile pool.
+4. Train UnmixerModel on per-tile reconstruction MSE — no entropy regularizer (sparsity
+   is enforced by sparsemax itself; the prior +lambda*H(w) term pushed weights toward
+   uniform and fought the projection).
+5. Aggregate val tile predictions to image level via scatter_mean (justified by
+   Assumption H).
+6. Calibrate per-class presence thresholds at the val-image level: for each class k,
+   theta_k = (calibrate_quantile)-th percentile of weights w_k(x) across positive images.
+7. Calibrate the residual unknown threshold at the val-image level:
+   theta_unk = (unknown_quantile)-th percentile of residual norms r(x).
+8. Save model + tile config + thresholds + class names. Headline numbers (test split)
+   come from experiments/run_presence_detection.py.
+
+CLI defaults are set so a fresh run looks like:
+    python -m src.simplex_unmixing.train
 """
 
 import argparse

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Hyperspherical repulsion regulariser ablation for Method A.
+"""Tier 2D ablation: hyperspherical repulsion regularizer for Method A.
 
-Adds lambda * mean_{i!=j} exp(P_i . P_j / tau_r) to the reconstruction MSE loss
+Adds λ * mean_{i≠j} exp(P_i·P_j / τ_r) to the reconstruction MSE loss
 so prototypes are pushed apart on the unit sphere without changing inference.
-Motivated by the bt/bs/mx confusion: bt's prototype collapses into the convex
-span of bs and mx because MSE alone does not penalise proximity.
+Motivated by the bt/bs/mx confusion: bt's prototype collapses into the
+convex span of bs and mx because MSE loss does not penalize proximity.
 
-Sweeps lambda in {0, 0.01, 0.1, 1.0} at tau_r = 0.1 (a stronger push than the
-model temperature tau = 10). Three seeds (1337/1338/1339); reports mean +/- std
-val and held-out F1 plus mean pairwise prototype similarity at convergence.
+Sweeps λ ∈ {0, 0.01, 0.1, 1.0} with τ_r=0.1 (stronger push than model τ=10).
+Seeds: 1337/1338/1339. Reports mean±std val/heldout F1 and mean pairwise
+prototype similarity at convergence.
 
 Output: outputs/repulsion_ablation/results.json
 """
@@ -119,7 +119,7 @@ def train_with_repulsion(
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--frames_dir", default="data/real/frames")
+    ap.add_argument("--frames_dir", default="data/real/augmented")
     ap.add_argument("--output_dir", default="outputs/repulsion_ablation")
     ap.add_argument("--backbone", default="vit_small_patch14_dinov2.lvd142m")
     ap.add_argument("--tile_size", type=int, default=224)

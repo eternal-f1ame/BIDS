@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """Test-time augmentation invariance check on Method B (cosine matcher).
 
-Applies six image transforms at inference (identity, rot90, rot180, rot270,
+Applies 6 image transforms at inference time (identity, rot90, rot180, rot270,
 hflip, vflip), re-extracts test tile features for each transform via the GPU
 illumination path, runs Method B's frozen prototype matrix, and reports
-per-sample F1. Verifies that the BIDS pipeline is approximately invariant to
-rotation and reflection of the input frame, a direct corollary of Assumption H.
+per-sample F1. The point is to verify that the BIDS pipeline is approximately
+invariant to rotation + reflection of the input frame, as the Spatial
+Homogeneity Assumption (H) implies it should be.
 
-Method B is the right host: it is closed-form so the test isolates pipeline
-invariance from training-time noise, and Methods A and C share the same
-front-end so the conclusion transfers.
+We use Method B because (a) it is closed-form so the test isolates pipeline
+invariance from training-time noise, and (b) Methods A and C inherit the same
+front-end so the same conclusion applies.
 
-Output: outputs/ablations/invariance/results.json (per-transform F1).
+Outputs: outputs/ablations/invariance/results.json with per-transform F1.
 """
 from __future__ import annotations
 

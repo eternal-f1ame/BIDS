@@ -1,15 +1,18 @@
 """Sinkhorn-Knopp doubly-stochastic assignment for prototype discovery.
 
-Follows the SK formulation from UNO / SwAV: SK normalizes a logit matrix into a
-doubly-stochastic Q matrix whose rows sum to 1/K (uniform over prototypes) and whose
-columns sum to 1/B (uniform over samples). After re-scaling, each column is a soft
-assignment of one tile to one of K prototypes.
+Adapted from sota_ncd/Cr-KD-NCD/model/losses.py:SinkhornKnopp (which itself
+follows UNO and SwAV). The SK iteration normalizes a logit matrix into a
+doubly-stochastic Q matrix whose rows sum to 1/K (uniform over prototypes)
+and whose columns sum to 1/B (uniform over samples). After re-scaling, each
+column is a soft assignment of one tile to one of K prototypes.
 
-Why this matters for BIDS discovery: the greedy cosine-clustering primitive in
-`src/simplex_unmixing/model.py` over-fragments (each seed eats its neighbors with no
-global balance constraint). Sinkhorn-Knopp instead enforces balanced cluster sizes, so
-a fixed K candidate set ends up well-spread across the residual-flagged tile pool
-rather than clumped on one direction.
+Why this matters for BIDS discovery: the greedy cosine-clustering primitive
+in src/simplex_unmixing/model.py over-fragments (proposes ~28 prototypes per
+fold for one held-out class) because each seed greedily eats its neighbors
+without any global balance constraint. Sinkhorn-Knopp instead enforces
+balanced cluster sizes, so a fixed K=2 or K=4 candidate set ends up well-
+spread across the residual-flagged tile pool rather than clumped on one
+direction.
 """
 from __future__ import annotations
 
@@ -19,8 +22,10 @@ import torch.nn.functional as F
 
 @torch.no_grad()
 def sinkhorn_knopp(logits: torch.Tensor, num_iters: int = 3, epsilon: float = 0.05) -> torch.Tensor:
-    """Doubly-stochastic Q from logits [B, K]. Returns Q [B, K] s.t. each column sums
-    to 1 (soft assignment of each tile across prototypes).
+    """Doubly-stochastic Q from logits [B, K]. Returns Q [B, K] s.t.
+    each column sums to 1 (soft assignment of each tile across prototypes).
+
+    Lifted from Cr-KD-NCD's `SinkhornKnopp.forward` (also in NCD-IIC).
     """
     Q = torch.exp(logits / epsilon).t()  # [K, B]
     B = Q.shape[1]

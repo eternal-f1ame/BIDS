@@ -14,15 +14,15 @@ randomly zeros half the 64 channels for each species before the linear head,
 forcing the 64 channels to be redundant discriminators. Loss is BCE against
 the per-tile binary presence label, mean-aggregated to image level at eval.
 
-Why this matches the morphology problem: the hardest species (`bs`, `bt`, `mx`,
-all thin rods) require many subtle features to distinguish. Forcing each species
-to learn 64 redundant detectors exploits the full DINOv2 feature richness rather
-than collapsing onto a single discriminative dimension that may overfit one
-morphology cue.
+Why this matches BIDS's morphology problem: our hardest species
+(`bs`/`bt`/`mx`, all thin rods) require many subtle features to distinguish.
+Forcing each species to learn 64 redundant detectors lets the model exploit
+the full DINOv2 feature richness rather than relying on a single
+discriminative dimension that might overfit one morphology cue.
 
-Training is end-to-end on the linear heads (DINOv2 itself is frozen, as in Methods
-A and B). Inference: per-tile sigmoid -> mean-aggregate per image -> threshold per
-class (val-calibrated).
+Training is end-to-end on the linear heads (DINOv2 itself is frozen, like
+Methods A/B). Inference: per-tile sigmoid -> mean-aggregate per image ->
+threshold per class (val-calibrated).
 """
 from __future__ import annotations
 

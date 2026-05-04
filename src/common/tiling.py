@@ -1,24 +1,24 @@
 """Multi-crop tiling for full-resolution microscopy frames.
 
-Operational realization of Assumption H (spatial homogeneity): every sufficiently
-large crop of a frame inherits the frame's label, so many i.i.d. tiles can be sampled
-per frame and their predictions aggregated by averaging.
+This module is the operational realization of Assumption H (spatial homogeneity): every
+sufficiently large crop of a frame inherits the frame's label, so we can sample many
+i.i.d. tiles per frame and aggregate their predictions by averaging.
 
-Design choices
---------------
-- Tiles come from the *full-resolution* PIL image (no pre-resize). Tiling preserves
-  the per-cell pixel budget that distinguishes morphologies.
-- Default tile_size = 224, the standard DINOv2 input (16 patches x 14 px), needing no
-  further resizing.
-- Training uses random crops (plus optional horizontal/vertical flips). Each frame
+Design choices and rationale
+----------------------------
+- Tiles are taken from the *full-resolution* PIL image (no pre-resize). The point of
+  tiling is to preserve the per-cell pixel budget that distinguishes morphologies.
+- Default tile_size = 224, which is the standard DINOv2 input (16 patches x 14 px) and
+  requires no further resizing.
+- Training uses random crops (+ optional horizontal/vertical flips). Each frame
   contributes `train_tiles_per_image` tiles per epoch, drawn independently.
 - Inference uses a deterministic n x n grid evenly spanning the frame:
-      x_i = round(i * (W - tile_size) / (n - 1))    for i in 0..n-1
-  Corners and interior are covered with no overlap. With n = 4 on a 2592 x 1944 frame,
-  the column positions are roughly [0, 789, 1579, 2368] and the row positions
+      x_i = round( i * (W - tile_size) / (n - 1) )    for i in 0..n-1
+  Corners + interior are covered with no overlap. With n = 4 on a 2592 x 1944 frame,
+  the four column positions are roughly [0, 789, 1579, 2368] and the four row positions
   [0, 573, 1147, 1720].
-- A `preprocess_fn` hook lets illumination normalization plug in without changing the
-  dataset signature.
+- A `preprocess_fn` hook lets Phase 2 (illumination normalization) plug in without
+  changing the dataset signature.
 """
 
 import os

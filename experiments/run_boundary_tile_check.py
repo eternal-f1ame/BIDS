@@ -102,7 +102,7 @@ def quantile_thresholds(scores, labels, quantile=0.05):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--feature_dir", default="outputs/bids_heldout/features")
-    ap.add_argument("--frames_dir", default="data/real/frames")
+    ap.add_argument("--frames_dir", default="data/real/augmented")
     ap.add_argument("--output_dir", default="outputs/boundary_tile_check")
     ap.add_argument("--seed", type=int, default=1337)
     args = ap.parse_args()

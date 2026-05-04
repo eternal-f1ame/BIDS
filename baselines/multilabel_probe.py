@@ -1,13 +1,15 @@
 """Multi-label linear-probe baseline across vision encoders.
 
 For each frozen encoder, extracts tile features via the shared BIDS pipeline
-(illumination + 4x4 grid tiling), trains a single `nn.Linear(D, K)` head with BCE,
-calibrates per-class thresholds on val, and scores test. One row per encoder is
-appended to `outputs/encoder_probe/results.csv`.
+(illumination-corrected + 4x4 grid tiling), trains a single `nn.Linear(D, K)`
+head with BCE, calibrates per-class thresholds on val, and scores test.
 
-The lineup spans pretraining objectives rather than model scale within one family:
-phase-contrast microscopy is pure shape/texture, so objective diversity is more
-informative than depth.
+One row per encoder written to ``outputs/encoder_probe/results.csv`` and optionally
+rendered to ``NeurIPS_Template/tables/tab_encoder_probe.tex``.
+
+The lineup is breadth across pretraining objectives, not depth within one family
+(see plan: frames are pure shape/texture phase-contrast microscopy, so objective
+diversity > model scaling).
 """
 
 from __future__ import annotations
@@ -55,7 +57,7 @@ ENCODERS: List[Tuple[str, str]] = [
     ("vit_base_patch16_siglip_224.webli",             "SigLIP ViT-B/16"),
     ("eva02_base_patch16_clip_224.merged2b",          "EVA-02 CLIP B/16"),
     ("davit_base_fl.msft_florence2",                  "Florence-2 DaViT-B"),
-    # Bio/pathology foundation models
+    # Bio/pathology foundation models (gated; require HF auth with approved access)
     ("hf-hub:prov-gigapath/prov-gigapath",            "Prov-GigaPath ViT-G"),
     ("hf-hub:MahmoodLab/UNI",                         "UNI ViT-L"),
 ]

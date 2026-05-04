@@ -1,10 +1,18 @@
 """Method C training: BCE on per-class channel-grouped DINOv2 tile embeddings.
 
-Tile features are extracted once (GPU illumination path, cached), per-image labels
-replicate to per-tile labels by H, and MCChannelHead trains with BCE while CRA
-dropout is active. Per-class presence thresholds calibrate on val by argmax-F1
-(Method C is discriminative, so val-F1 calibration is the natural analog of the
-supervised-baseline rule).
+Pipeline mirrors Methods A/B (src/simplex_unmixing/train.py and
+src/prototype_matching/train.py):
+  1. load_real_split for train + val (image-level random 80/10/10).
+  2. Extract DINOv2 tile features via the GPU illumination path (cached).
+  3. Replicate per-image labels to per-tile labels (all tiles inherit the
+     image label by Spatial Homogeneity Assumption H).
+  4. Train MCChannelHead with BCE on (tile_logit, tile_label) for `--epochs`.
+     CRA dropout is active during training.
+  5. Forward val tiles, mean-aggregate sigmoids per image, calibrate per-class
+     thresholds at the val image level by argmax-F1 on val (matches the
+     supervised baseline calibration; Method C is discriminative so val-F1
+     calibration is the right analog).
+  6. Save model.pt + config.json + train_summary.json.
 """
 from __future__ import annotations
 
@@ -32,7 +40,8 @@ from src.mc_channel.model import MCChannelHead, MCConfig
 
 
 def calibrate_argmax_f1(scores: np.ndarray, labels: np.ndarray) -> np.ndarray:
-    """Per-class threshold = argmax F1 on a 99-point grid."""
+    """Per-class threshold = argmax F1 on a 99-point grid (matches
+    baselines/multilabel_probe.py and supervised_multilabel.py)."""
     K = scores.shape[1]
     grid = np.linspace(0.01, 0.99, 99)
     out = np.zeros(K)

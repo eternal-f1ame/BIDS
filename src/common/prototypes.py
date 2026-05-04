@@ -1,17 +1,18 @@
-"""Prototype initialization helpers shared by Methods A and B.
+"""Prototype initialization helpers shared by Method A and Method B.
 
 Two strategies:
 
-1. **Pure-culture mean** -- when a single-species video exists for every class
-   (folder names match a class token, e.g. `bs/`, `bt/`, `fj/`, `ka/`, `mx/`,
-   `pf/`), each prototype is the L2-normalized mean of all tile embeddings
-   drawn from that video. This is the cleanest anchor obtainable without
-   supervised training: it places each prototype at the centroid of its class
-   manifold under the frozen DINOv2 metric.
+1. **Pure-culture mean** — when a single-species video exists for every class
+   (e.g., folders `b/`, `f/`, `k/`, `p/`), each prototype is the L2-normalized
+   mean of all tile embeddings drawn from that video. This is the cleanest
+   anchor we can build without supervised training: it places each prototype at
+   the centroid of its class manifold under the frozen DINOv2 metric. This is
+   the procedure the AnimalCLEF winners used for known-class prototypes.
 
-2. **K-means** (fallback) -- if any class lacks a pure-culture video, fall
-   back to K-means on the full pool of tile embeddings (implemented in
-   `src.simplex_unmixing.model.initialize_prototypes`).
+2. **K-means** (fallback) — if any class lacks a pure-culture video, fall back
+   to K-means on the full pool of tile embeddings. The existing
+   `initialize_prototypes` in `src.simplex_unmixing.model` already implements
+   this; we expose it here for symmetry.
 """
 
 from typing import List, Optional

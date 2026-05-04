@@ -15,10 +15,10 @@ per-sample regardless of K. Macro per-class F1 is reported alongside as a per-cl
 diagnostic.
 
 Edge case: a sample with y_i = 0 and p_i = 0 (the model correctly says "nothing here")
-has 2*0 / (2*0 + 0 + 0) = 0/0. This is defined as F1 = 1.0 (perfect agreement on
+has 2*0 / (2*0 + 0 + 0) = 0/0. We define this as F1 = 1.0 (perfect agreement on
 emptiness). In bacterial cultures every frame has at least one species so this case
-should not arise during in-distribution evaluation, but it does arise during open-set
-evaluation when the model is allowed to abstain.
+should not arise — but it WILL arise during open-set evaluation when we ask the model
+to abstain.
 """
 
 from typing import Dict, Optional
@@ -130,3 +130,17 @@ def combined_metric(f1: float, auroc: float, alpha: float = 0.5) -> float:
     return float(alpha * f1 + (1.0 - alpha) * auroc)
 
 
+# ----- backward-compat wrapper for the old presence_f1 API -----------------------------
+
+def presence_f1(y_true: np.ndarray, y_scores: np.ndarray, threshold: float = 0.05) -> float:
+    """DEPRECATED: kept so old call sites in experiments/ still run.
+
+    The old implementation flattened both arrays and computed binary F1 over (N*K)
+    pairs. That was effectively a *micro* F1 across all (sample, class) cells, which
+    is not the PlantCLEF metric. New code should call `per_sample_f1` directly with
+    pre-thresholded predictions.
+
+    This wrapper applies the threshold to `y_scores` and forwards to `per_sample_f1`.
+    """
+    y_pred = (np.asarray(y_scores) >= threshold).astype(np.int64)
+    return per_sample_f1(y_true, y_pred)

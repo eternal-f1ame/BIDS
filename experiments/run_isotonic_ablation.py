@@ -1,14 +1,24 @@
 #!/usr/bin/env python3
 """Isotonic recalibration ablation for Method B.
 
-Tests whether fitting a per-class isotonic regressor on val similarities
-improves per-sample F1 without changing AUROC (isotonic is monotone, so rank
-order is preserved). Reports test scores under three threshold-selection
-protocols: (a) baseline q=0.05 thresholds on raw similarities; (b) argmax-F1
-thresholds on raw similarities (the fair comparison); (c) argmax-F1 thresholds
-on isotonic-calibrated probs.
+Claim being tested (paper §5.isotonic): fitting a per-class isotonic regressor
+on validation-split similarities improves per-sample F1 by ~0.5 pp without
+changing AUROC (isotonic is monotone, so rank order is preserved).
 
-Output: outputs/isotonic_ablation/{results.json,summary.md}.
+Pipeline:
+  1. Load cached val + test tile features from outputs/prototype_matching/6class/
+  2. Mean-pool tiles to image-level similarities s_k(x)
+  3. For each class k, fit IsotonicRegression on (s_k(val), y_k(val))
+  4. Apply calibrator to s_k(test) -> calibrated probabilities p_k(test)
+  5. Pick per-class threshold on CALIBRATED val probs by argmax F1 over
+     [0.01, 0.99]
+  6. Score test with both (a) baseline thresholds on raw similarities,
+     (b) argmax-F1 thresholds on raw similarities (fair comparison), and
+     (c) argmax-F1 thresholds on isotonic-calibrated probs.
+  7. Report per-sample F1, macro F1, exact match for all three; also AUROC
+     per class (should be identical between raw and calibrated).
+
+Writes outputs/isotonic_ablation/{results.json,summary.md}.
 """
 from __future__ import annotations
 

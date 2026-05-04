@@ -1,20 +1,33 @@
 #!/usr/bin/env python3
-"""Attention-MIL baseline on the same frozen tile pool as the BIDS decoders.
+"""Attention-based MIL baseline for BIDS, evaluated on both the random 80/10/10
+split (Table 2 / random) and the leave-combinations-out split (Table 2 / heldout
+and Table 3).
 
-Gated attention pooling from Ilse et al., 2018 (eqs. 8 and 9):
+The head is the gated attention pooling of Ilse et al., 2018 (eqs. 8 and 9):
 
     h_t = embedding for tile t, t = 1..T
-    e_t = (V tanh(W h_t)) * sigmoid(U h_t)   # gated attention scores
-    a_t = softmax_t(e_t)                     # per-bag (per-image)
-    z   = sum_t a_t * h_t                    # bag embedding
-    y   = sigmoid(C z)                       # K-dim presence logits
+    e_t = (V tanh(W h_t)) * sigmoid(U h_t)               # gated attention scores
+    a_t = softmax_t(e_t)                                  # per-bag (per-image)
+    z   = sum_t a_t * h_t                                  # bag embedding
+    y   = sigmoid(C z)                                     # K-dim presence logits
 
-Differs from the BIDS decoders only in that the per-image aggregator is
-gradient-trained attention pooling rather than a per-class geometric anchor.
-Same frozen DINOv2-S/14 tile features (cached), same 4x4 grid at 224 px under
-divide-by-Gaussian illumination, same val argmax-F1 threshold calibration. Runs
-both regimes (random 80/10/10 and leave-combinations-out) and writes one
-results.json per regime to outputs/mil_attention/{random,heldout}/.
+The decoder is intentionally similar in spirit to the BIDS pipeline (per-tile
+features mean-aggregated to image-level under Assumption H) but the aggregation
+weights are now LEARNED with gradient flow into a per-image discriminative head,
+which is the design our anchor-based decoders are an alternative to.
+
+We share everything else with the BIDS decoders:
+  - Frozen DINOv2-S/14 features (cached, read directly from
+    outputs/bids_heldout/features/ or outputs/.../*_features_cache.pt)
+  - 4x4 grid tiles at 224 px under divide-by-Gaussian illumination
+  - Per-class thresholds calibrated on val by argmax-F1 (matches Method C, since
+    this is also a gradient-trained discriminative head)
+
+The result is one row per regime: random 80/10/10 (paired with Tab. 2 random
+block) and leave-combinations-out (paired with Tab. 3).
+
+Outputs:
+  outputs/mil_attention/{random,heldout}/results.json (per-row test metrics).
 """
 from __future__ import annotations
 
@@ -376,7 +389,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--protocol", default="both", choices=["random", "heldout", "both"])
     ap.add_argument("--splits_path", default="data/real/splits.json")
-    ap.add_argument("--frames_dir", default="data/real/frames")
+    ap.add_argument("--frames_dir", default="data/real/augmented")
     ap.add_argument("--output_dir", default="outputs/mil_attention")
     ap.add_argument("--heldout_counts", default="")
     ap.add_argument("--epochs", type=int, default=30)

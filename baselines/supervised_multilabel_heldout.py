@@ -1,12 +1,25 @@
 #!/usr/bin/env python3
-"""Leave-combinations-out generalization for the supervised multi-label baseline.
+"""Leave-combinations-out generalization experiment for the supervised
+multi-label baseline.
 
-Holds out 9 entire combinations from training (1 single / 2 pairs / 3 triples /
-2 quadruples / 1 six-species at seed 1337) and tests whether an end-to-end fine-tune
-on the remaining 31 combinations identifies species in held-out combinations never
-seen plated together. Trained-on combos split image-level 90/10 train/val; the 9
-held-out combos form the entire test set. Per-class thresholds calibrate on val by
-argmax-F1.
+Holds out 9 entire combinations from training (1 single / 2 pairs / 3 triples
+/ 2 quadruples / 1 six-species) and asks whether an end-to-end ResNet-50
+trained on the remaining 31 combinations can still identify the species
+present in held-out combinations it has never seen plated together.
+
+Pipeline:
+  1. Deterministically pick held-out combinations per order (seed 1337).
+  2. Split remaining combinations 90/10 image-level -> train / val.
+  3. The held-out combinations form the test set (all 9,000 images).
+  4. Fine-tune ResNet-50 end-to-end with BCE for 15 epochs.
+  5. Pick per-class thresholds on val by argmax F1.
+  6. Report:
+     - In-distribution val metrics (images from combos seen at train time)
+     - Held-out test metrics aggregated
+     - Per-held-out-combo F1 / AUROC (which combos the model fails on)
+
+Writes outputs/supervised_multilabel_heldout/<run>/{results.json, summary.md,
+test_scores.npy, test_labels.npy, model.pt}.
 """
 from __future__ import annotations
 
@@ -43,7 +56,7 @@ DEFAULT_HELDOUT_COUNTS = {
     2: 2,   # 2 pairwise
     3: 3,   # 3 triples
     4: 2,   # 2 quadruples
-    6: 1,   # 1 six-species (no 5-species combinations exist in the dataset)
+    6: 1,   # 1 six-species (we have no 5-species in the dataset)
 }
 
 

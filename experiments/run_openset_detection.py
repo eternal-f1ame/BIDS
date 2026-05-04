@@ -1,21 +1,27 @@
 #!/usr/bin/env python3
-"""Leave-one-class-out (LOOCV) open-set detection harness.
+"""Phase 6 — Leave-one-class-out open-set detection harness (BIDS).
 
-For each held-out class k: drop every frame with label[:, k] == 1 from train;
-init prototypes for the remaining K-1 classes from pure-culture videos; score
-the FULL test split for unknown-detection signal:
+For each class `k` in `class_names`:
+  * Build a "known" train subset by dropping every frame with label[:, k] == 1.
+    Pure-culture videos for remaining classes survive the filter, so pure-culture
+    init still works.
+  * Reduce the label space to K-1 classes (column k removed).
+  * Initialize prototypes for the remaining K-1 classes from pure-culture videos.
+  * Score the FULL test split with both methods:
+      - Method A: unknown score = mean tile residual norm r(x) (high = unknown)
+      - Method B: unknown score = -m(x) where m(x) = mean max-cosine-sim
+                  (low similarity = unknown, so negate for the "higher = more
+                  unknown" convention used by open_set_auroc)
+  * Ground truth: y_unknown[i] = 1 iff test_labels[i, k] == 1.
+  * Record AUROC, AUPR, FPR@95TPR per method per held-out class.
 
-  - Method A: unknown score = mean tile residual norm r(x)        (high = unknown)
-  - Method B: unknown score = -m(x), m(x) = mean max-cosine-sim   (high = unknown)
-  - k-NN:    unknown score = mean cosine-distance to k nearest training tiles
-             (the strongest score on this benchmark)
+Aggregates mean ± std across the K folds to `outputs/openset_loocv/summary.{csv,json}`.
 
-Ground truth: y_unknown[i] = 1 iff test_labels[i, k] == 1. Records AUROC, AUPR,
-FPR@95TPR per method per held-out class. Aggregates mean +/- std across the K
-folds to `outputs/openset_loocv/summary.{csv,json}`. Pure-culture init is
-sufficient because both anchor-based methods are essentially closed-form once
-prototypes are placed at class centroids; skipping gradient training keeps the
-harness deterministic and fast.
+Pure-culture init is sufficient — both methods are effectively closed-form once
+prototypes are placed at class centroids (Method A's gradient training barely
+moves them from this initialization). Skipping gradient training keeps the
+harness deterministic and fast; Method A's full training loop is exercised in
+`experiments/run_ablations.py` (Phase 7).
 """
 
 import argparse

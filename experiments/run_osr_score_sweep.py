@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """Sweep over open-set scoring functions on the same LOOCV protocol.
 
-Per fold, initialise K-1 known prototypes from pure-culture videos, then compute
-four open-set scores at the tile level (mean-aggregated to image level via
-scatter-mean) and report AUROC / AUPR / FPR@95 against the binary known/unknown
-label:
+Reuses outputs/openset_loocv/features/{train,test}_features.pt and the
+existing fold structure. For each fold we initialize K-1 known prototypes via
+pure-culture init, then compute four open-set scores and report
+AUROC / AUPR / FPR@95 against the binary known/unknown label:
 
-  1. residual : ||z - P^T sparsemax(tau P z)||                 (Method A native)
-  2. neg_max  : -max_k cosine(z, P_k)                          (Method B native)
-  3. energy   : -log sum_k exp(cosine(z, P_k) / T)             (Liu 2020; T=0.1)
-  4. knn      : mean cosine-distance to the k nearest train tiles (Sun 2022)
+  1. residual  : ||z - P^T sparsemax(tau P z)|| (Method A's native score)
+  2. neg_max   : -max_k cosine(z, P_k)         (Method B's native score)
+  3. energy    : -log sum_k exp(cosine(z, P_k) / T)  (Liu 2020; T=0.1)
+  4. knn       : distance to K-th nearest train tile in feature space (Sun 2022)
 
-Output: outputs/osr_score_sweep/summary.{csv,json}.
+All scores are computed at the tile level, then mean-aggregated to image
+level via scatter_mean. KNN uses train tile features as the reference set.
+
+Outputs outputs/osr_score_sweep/summary.{csv,json}.
 """
 from __future__ import annotations
 

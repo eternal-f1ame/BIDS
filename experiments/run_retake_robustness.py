@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
-"""Cross-session retake test: evaluate primary-trained models on 16 retake videos.
+"""Retake robustness: evaluate primary-trained models on the 16 retake videos.
 
-Reports per-sample F1 on retake frames for Methods A and B and compares against
-primary-test F1 to bound the within-instrument distribution shift from slide
-preparation, focus, and culture density variation.
+Report per-sample F1 on the retake frames for both Method A (simplex unmix) and
+Method B (prototype matching), and compare against the primary-test F1 to
+quantify distribution shift from slide preparation, focus, and culture density
+variation.
 
-Output: outputs/retake_robustness/{results.json,summary.md}.
+Reads trained models from:
+  outputs/simplex_unmixing/6class/
+  outputs/prototype_matching/6class/
+
+Writes:
+  outputs/retake_robustness/results.json
+  outputs/retake_robustness/summary.md
 """
 from __future__ import annotations
 
@@ -105,7 +112,7 @@ def score_proto(cfg_path: Path, model_path: Path, tile_feats: torch.Tensor,
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--retakes_dir", type=str,
-                    default="data/real/frames_retakes")
+                    default="data/real/augmented_retakes")
     ap.add_argument("--simplex_dir", type=str,
                     default="outputs/simplex_unmixing/6class")
     ap.add_argument("--proto_dir", type=str,

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""KNN open-set FPR at multiple TPR operating points (0.80, 0.90, 0.95).
+"""Compute KNN OSR FPR at multiple TPR operating points (0.80, 0.90, 0.95).
 
-Reads cached features at outputs/openset_loocv/features/, recomputes per-fold
-KNN scores, and reports FPR at TPR in {0.80, 0.90, 0.95} per fold and aggregated.
-The operating-point disclosure clarifies what AUROC alone obscures: how usable
+Reads cached features at outputs/openset_loocv/features/ (shared with the
+existing OSR sweep), recomputes per-fold KNN scores, and reports FPR at
+TPR in {0.80, 0.90, 0.95} per fold and aggregated. This is the operating-
+point disclosure for §4.3 / abstract: AUROC alone overstates how usable
 the score is in deployment.
 """
 from __future__ import annotations
