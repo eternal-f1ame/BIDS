@@ -13,13 +13,14 @@ The repository contains:
 - Three decoders over a shared frozen-feature pool (`src/`).
 - The supervised baselines used to expose the compositional collapse on the
   leave-combinations-out (LCO) protocol (`baselines/`).
-- The experiment drivers for LCO, leave-one-class-out (LOOCV) open-set
-  rejection, and SK K=1 novel-class discovery (`experiments/`).
-- The tooling that ingests raw video into the splits the paper uses, packages
-  the dataset for release, and regenerates the paper figures (`tools/`).
+- The experiment drivers for LCO, leave-one-out cross-validation (LOOCV)
+  over species for open-set rejection, and SK K=1 novel-class discovery (`experiments/`).
+- The tooling that ingests microscopy sessions into the splits the paper uses,
+  packages the dataset for release, and regenerates the paper figures (`tools/`).
 
 The dataset (~22 GB, CC BY 4.0) is hosted separately at
-https://huggingface.co/datasets/AnonymousResearchTiger/BIDS
+https://huggingface.co/datasets/PLACEHOLDER/BIDS
+<!-- Update this URL after uploading to your HF account -->
 
 ## Install
 
@@ -122,9 +123,9 @@ These are non-negotiable design rules of BIDS, not preferences:
    not equal cell-count proportions). All metrics are presence / absence.
 2. **Real microscopy only.** All reported numbers come from real
    microscopy; there is no synthetic-data path.
-3. **Video-level splits.** Adjacent-frame autocorrelation in a multi-minute
-   video is high. Splits never mix frames from the same video across
-   train / val / test.
+3. **Session-level splits.** Images from the same culture session are
+   temporally autocorrelated. Splits never mix images from the same session
+   across train / val / test.
 
 ## Repository layout
 
@@ -148,10 +149,12 @@ between runs to skip re-extraction when the key matches.
 
 ```bibtex
 @misc{bids2026,
-  title  = {BIDS: Bacterial IDentification under Spatial homogeneity},
-  author = {Anonymous Authors},
-  year   = {2026},
-  note   = {Under review}
+  title        = {{BIDS}: A Phase-Contrast Microscopy Benchmark for
+                  Compositional and Open-World Bacterial Identification},
+  author       = {Anonymous Authors},
+  year         = {2026},
+  note         = {Under review at the NeurIPS 2026 Datasets and Benchmarks Track},
+  howpublished = {OpenReview: \url{https://openreview.net/PLACEHOLDER}},
 }
 ```
 
