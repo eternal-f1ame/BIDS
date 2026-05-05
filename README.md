@@ -150,7 +150,7 @@ between runs to skip re-extraction when the key matches.
 ```bibtex
 @misc{bids2026,
   title        = {{BIDS}: A Phase-Contrast Microscopy Benchmark for
-                  Compositional and Open-World Bacterial Identification},
+                  Open-World Bacterial Identification},
   author       = {Anonymous Authors},
   year         = {2026},
   note         = {Under review at the NeurIPS 2026 Datasets and Benchmarks Track},
