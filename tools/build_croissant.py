@@ -8,7 +8,7 @@ contentUrl field by joining --hosting-url-base with the file's basename.
 Usage:
 
     python tools/build_croissant.py \
-        --hosting-url-base https://huggingface.co/datasets/PLACEHOLDER_ANON_USER/BIDS/resolve/main \
+        --hosting-url-base https://huggingface.co/datasets/PLACEHOLDER_ANON_USER/PHOEBI/resolve/main \
         --release-dir data/release
 
 If a FileObject's file is missing locally the hash is left as the
@@ -50,7 +50,7 @@ def main() -> None:
                     help="Path to the Croissant JSON-LD file to rewrite in place.")
     ap.add_argument("--hosting-url-base", required=True,
                     help="Base URL where the release files will live, "
-                         "e.g. https://huggingface.co/datasets/PLACEHOLDER_ANON_USER/BIDS/resolve/main")
+                         "e.g. https://huggingface.co/datasets/PLACEHOLDER_ANON_USER/PHOEBI/resolve/main")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 

@@ -3,7 +3,7 @@
 
 Aggregates per_heldout_combo F1 across seeds 1337/1338/1339 and prints a
 table by combination order (1,2,3,4,6). Writes
-outputs/bids_heldout_per_order.json for downstream figure rendering.
+outputs/phoebi_heldout_per_order.json for downstream figure rendering.
 """
 from __future__ import annotations
 
@@ -14,9 +14,9 @@ from pathlib import Path
 import numpy as np
 
 SEED_DIRS = [
-    "outputs/bids_heldout",
-    "outputs/bids_heldout_seed1338",
-    "outputs/bids_heldout_seed1339",
+    "outputs/phoebi_heldout",
+    "outputs/phoebi_heldout_seed1338",
+    "outputs/phoebi_heldout_seed1339",
 ]
 METHODS = ["A_simplex", "B_proto", "C_channel"]
 METHOD_LABELS = {"A_simplex": "A (simplex)", "B_proto": "B (proto)", "C_channel": "C (channel)"}
@@ -67,7 +67,7 @@ def main() -> None:
         out[order] = row
 
     # Write JSON
-    out_path = Path("outputs/bids_heldout_per_order.json")
+    out_path = Path("outputs/phoebi_heldout_per_order.json")
     with open(out_path, "w") as f:
         json.dump(out, f, indent=2)
     print(f"\nWrote {out_path}")

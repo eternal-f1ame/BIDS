@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Aggregate val/heldout F1 across multiple seeds for the BIDS LCO protocol.
+"""Aggregate val/heldout F1 across multiple seeds for the PHOEBI LCO protocol.
 
-Reads outputs/bids_heldout_seed<seed>/results.json (or outputs/bids_heldout/results.json
+Reads outputs/phoebi_heldout_seed<seed>/results.json (or outputs/phoebi_heldout/results.json
 for the canonical seed 1337) and reports mean +/- std per method per metric.
 """
 from __future__ import annotations
@@ -26,9 +26,9 @@ def load_seed_results(out_dir: Path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed_dirs", nargs="+", default=[
-        "outputs/bids_heldout",
-        "outputs/bids_heldout_seed1338",
-        "outputs/bids_heldout_seed1339",
+        "outputs/phoebi_heldout",
+        "outputs/phoebi_heldout_seed1338",
+        "outputs/phoebi_heldout_seed1339",
     ])
     ap.add_argument("--seeds", nargs="+", type=int, default=[1337, 1338, 1339])
     args = ap.parse_args()
@@ -110,7 +110,7 @@ def main():
         "seeds": [s for s, _ in by_seed],
         "aggregate": aggregate,
     }
-    out_path = Path("outputs/bids_heldout_aggregate.json")
+    out_path = Path("outputs/phoebi_heldout_aggregate.json")
     with open(out_path, "w") as f:
         json.dump(out, f, indent=2)
     print(f"\nWrote {out_path}")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the release archives for the BIDS dataset.
+"""Build the release archives for the PHOEBI dataset.
 
 Produces three gzipped tar archives plus a copy of splits.json under
 data/release/, ready to upload to Hugging Face (or any of the four NeurIPS

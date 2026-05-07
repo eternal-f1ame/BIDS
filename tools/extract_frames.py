@@ -5,7 +5,7 @@ Idempotent: skips any video whose output folder already contains at least
 `--n_frames` images. New videos dropped into `--video_dir` are picked up on the
 next run; existing extractions are not touched.
 
-Default I/O matches the BIDS layout:
+Default I/O matches the PHOEBI layout:
     inputs : data/videos/*.mp4
     outputs: data/images/<video_name>/frame_NNNN.jpg
 

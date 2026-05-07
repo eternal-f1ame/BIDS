@@ -52,9 +52,9 @@ def main() -> None:
 
     model_dir = Path(args.model_dir)
     config_path = model_dir / "config.json"
-    model_path = model_dir / "bids_model.pt"
+    model_path = model_dir / "phoebi_model.pt"
     if not model_path.exists() or not config_path.exists():
-        raise SystemExit("Missing model artifacts. Expected bids_model.pt and config.json.")
+        raise SystemExit("Missing model artifacts. Expected phoebi_model.pt and config.json.")
 
     config = load_json(str(config_path))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

@@ -4,7 +4,7 @@
 Applies 6 image transforms at inference time (identity, rot90, rot180, rot270,
 hflip, vflip), re-extracts test tile features for each transform via the GPU
 illumination path, runs Method B's frozen prototype matrix, and reports
-per-sample F1. The point is to verify that the BIDS pipeline is approximately
+per-sample F1. The point is to verify that the PHOEBI pipeline is approximately
 invariant to rotation + reflection of the input frame, as the Spatial
 Homogeneity Assumption (H) implies it should be.
 

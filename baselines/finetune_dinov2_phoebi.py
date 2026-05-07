@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""End-to-end fine-tuning of DINOv2-S/14 through the BIDS GPU pipeline.
+"""End-to-end fine-tuning of DINOv2-S/14 through the PHOEBI GPU pipeline.
 
 Workers only JPEG-decode raw uint8 frames; illumination correction, tile
 slicing, ImageNet normalization, and DINOv2 forward (with gradient) all happen

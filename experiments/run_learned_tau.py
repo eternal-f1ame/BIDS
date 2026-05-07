@@ -37,8 +37,8 @@ from baselines.supervised_multilabel_heldout import (
 )
 from tools.build_splits import discover_class_names, parse_label_tokens
 
-# Reuse data helpers from run_bids_heldout
-from experiments.run_bids_heldout import (
+# Reuse data helpers from run_phoebi_heldout
+from experiments.run_phoebi_heldout import (
     collect_entries, image_level_90_10, split_lists,
     hybrid_prototype_init, quantile_thresholds,
 )

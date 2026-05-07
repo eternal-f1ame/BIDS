@@ -180,7 +180,7 @@ def main() -> None:
     print("Scoring Method A...")
     w_img, r_img = score_simplex(
         simplex_dir / "config.json",
-        simplex_dir / "bids_model.pt",
+        simplex_dir / "phoebi_model.pt",
         tile_feats, image_index, N, device,
     )
     simplex_thresh = np.asarray(simplex_cfg["thresholds"])

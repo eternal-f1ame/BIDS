@@ -6,7 +6,7 @@ K class-groups, force every channel to discriminate its assigned class via
 per-channel CE, then randomly mask 60% of the channels per group at every
 step (Channel Random Activation, CRA) so no single channel dominates.
 
-BIDS adaptation: DINOv2's frozen tile embedding has dimension D=384 with no
+PHOEBI adaptation: DINOv2's frozen tile embedding has dimension D=384 with no
 explicit spatial axis (per-tile pooled). We split D into K class-groups of
 D/K channels each (default K=6, 64 channels per species). Each species gets a
 1-D linear head over its 64 channels producing a presence logit. Per-step CRA
@@ -14,7 +14,7 @@ randomly zeros half the 64 channels for each species before the linear head,
 forcing the 64 channels to be redundant discriminators. Loss is BCE against
 the per-tile binary presence label, mean-aggregated to image level at eval.
 
-Why this matches BIDS's morphology problem: our hardest species
+Why this matches PHOEBI's morphology problem: our hardest species
 (`bs`/`bt`/`mx`, all thin rods) require many subtle features to distinguish.
 Forcing each species to learn 64 redundant detectors lets the model exploit
 the full DINOv2 feature richness rather than relying on a single

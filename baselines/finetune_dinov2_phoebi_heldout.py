@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""End-to-end fine-tuning of DINOv2-S/14 through the BIDS GPU pipeline,
+"""End-to-end fine-tuning of DINOv2-S/14 through the PHOEBI GPU pipeline,
 under the leave-combinations-out protocol used by
 baselines/supervised_multilabel_heldout.py.
 
@@ -13,7 +13,7 @@ Same heldout split as baselines/supervised_multilabel_heldout.py:
   1 six-species), trained-on combos split image-level 90/10 train/val,
   the 9 held-out combos form the entire test set.
 
-Outputs to outputs/finetune_dinov2_bids_heldout/<run>/{model.pt,results.json,
+Outputs to outputs/finetune_dinov2_phoebi_heldout/<run>/{model.pt,results.json,
 summary.md,test_scores.npy,test_labels.npy}.
 """
 from __future__ import annotations
@@ -90,7 +90,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--frames_dir", default="data/images",
                     help="Native-resolution frame folders, one per combination.")
-    ap.add_argument("--output_dir", default="outputs/finetune_dinov2_bids_heldout/dinov2_s14")
+    ap.add_argument("--output_dir", default="outputs/finetune_dinov2_phoebi_heldout/dinov2_s14")
     ap.add_argument("--backbone", default="vit_small_patch14_dinov2.lvd142m")
     ap.add_argument("--input_size", type=int, default=224)
     ap.add_argument("--grid_size", type=int, default=4)
@@ -290,7 +290,7 @@ def main():
     torch.save(best_state, out_dir / "model.pt")
 
     md = []
-    md.append(f"# BIDS-pipeline DINOv2 fine-tune, leave-combinations-out\n")
+    md.append(f"# PHOEBI-pipeline DINOv2 fine-tune, leave-combinations-out\n")
     md.append(f"Held-out combinations ({len(heldout)}): "
               f"`{', '.join(heldout)}`\n")
     md.append(f"train={len(train_paths)}  val={len(val_paths)}  "
@@ -315,7 +315,7 @@ def main():
                   f"{m['per_sample_f1']:.4f} | {m['exact_match']:.4f} |")
     (out_dir / "summary.md").write_text("\n".join(md) + "\n")
 
-    print(f"\n=== BIDS-pipeline DINOv2 fine-tune (held-out combos) ===")
+    print(f"\n=== PHOEBI-pipeline DINOv2 fine-tune (held-out combos) ===")
     print(f"  Val (in-distribution):  F1 = {val_metrics['per_sample_f1']:.4f}")
     print(f"  Test (held-out combos): F1 = {test_metrics['per_sample_f1']:.4f}")
     print(f"  delta F1: {val_metrics['per_sample_f1'] - test_metrics['per_sample_f1']:.4f}")

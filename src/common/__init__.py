@@ -1,4 +1,4 @@
-"""Shared utilities for BIDS (Bacterial Identification via Sparse Prototype Decomposition).
+"""Shared utilities for PHOEBI (Bacterial Identification via Sparse Prototype Decomposition).
 
 Both Method A (simplex unmixing) and Method B (prototype matching) are built on the
 spatial homogeneity assumption: for any sufficiently large crop c of a microscopy frame

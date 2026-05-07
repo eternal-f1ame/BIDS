@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ablation harness for BIDS — real-data tile pipeline.
+"""Ablation harness for PHOEBI — real-data tile pipeline.
 
 Each subcommand produces one paper table:
 
@@ -770,7 +770,7 @@ def _add_common(parser: argparse.ArgumentParser) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="BIDS ablation sweeps.")
+    parser = argparse.ArgumentParser(description="PHOEBI ablation sweeps.")
     sub = parser.add_subparsers(dest="sweep", required=True)
 
     for name, fn in [

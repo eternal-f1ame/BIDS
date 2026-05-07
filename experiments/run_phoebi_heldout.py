@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Run BIDS Methods A, B, C in the leave-combinations-out regime.
+"""Run PHOEBI Methods A, B, C in the leave-combinations-out regime.
 
 Same heldout protocol as baselines/supervised_multilabel_heldout.py and
-baselines/finetune_dinov2_bids_heldout.py:
+baselines/finetune_dinov2_phoebi_heldout.py:
   - 9 held-out combinations (1 single / 2 pairs / 3 triples / 2 quadruples /
     1 six-species), seed 1337.
   - 31 trained-on combos -> image-level 90/10 split for train/val.
@@ -16,7 +16,7 @@ tile features from images containing that species for the held-out singleton
 (which has no pure-culture combo in the trained set). This is symmetric to
 what the supervised baseline sees.
 
-Outputs to outputs/bids_heldout/{results.json, summary.md, per_combo.csv}.
+Outputs to outputs/phoebi_heldout/{results.json, summary.md, per_combo.csv}.
 """
 from __future__ import annotations
 
@@ -321,7 +321,7 @@ def run_method_c(
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--frames_dir", default="data/images")
-    ap.add_argument("--output_dir", default="outputs/bids_heldout")
+    ap.add_argument("--output_dir", default="outputs/phoebi_heldout")
     ap.add_argument("--backbone", default="vit_small_patch14_dinov2.lvd142m")
     ap.add_argument("--tile_size", type=int, default=224)
     ap.add_argument("--eval_grid_size", type=int, default=4)
@@ -478,7 +478,7 @@ def main():
     (out_dir / "results.json").write_text(json.dumps(results, indent=2))
 
     md = []
-    md.append("# BIDS Methods A/B/C in held-out-combinations regime\n")
+    md.append("# PHOEBI Methods A/B/C in held-out-combinations regime\n")
     md.append(f"Held-out combinations ({len(heldout)}): "
               f"`{', '.join(heldout)}`\n")
     md.append(f"train={n_train}  val={n_val}  test(heldout)={n_test}\n\n")
@@ -503,7 +503,7 @@ def main():
         md.append("| " + " | ".join(row) + " |")
     (out_dir / "summary.md").write_text("\n".join(md) + "\n")
 
-    print("\n=== BIDS Methods A/B/C, leave-combinations-out ===")
+    print("\n=== PHOEBI Methods A/B/C, leave-combinations-out ===")
     for tag in ["A_simplex", "B_proto", "C_channel"]:
         m = results["methods"][tag]
         print(f"  {tag:12s}  val F1 = {m['val_in_distribution']['per_sample_f1']:.4f}  "

@@ -1,7 +1,7 @@
 """Illumination normalization for microscopy frames.
 
 Phase-contrast microscope images have a slow-varying multiplicative gain field caused
-by the condenser/lamp geometry. In the BIDS frames this manifests as a pink/white
+by the condenser/lamp geometry. In the PHOEBI frames this manifests as a pink/white
 hotspot in the lower-right corner. Without correction, DINOv2 learns to lean on the
 hotspot as a feature.
 

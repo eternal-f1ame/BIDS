@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Phase 6 — Leave-one-class-out open-set detection harness (BIDS).
+"""Phase 6 — Leave-one-class-out open-set detection harness (PHOEBI).
 
 For each class `k` in `class_names`:
   * Build a "known" train subset by dropping every frame with label[:, k] == 1.
@@ -261,7 +261,7 @@ def run_fold(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="BIDS Phase 6: LOOCV open-set harness")
+    parser = argparse.ArgumentParser(description="PHOEBI Phase 6: LOOCV open-set harness")
     parser.add_argument("--splits_path", type=str, default="data/splits.json")
     parser.add_argument("--output_dir", type=str, default="outputs/openset_loocv")
     parser.add_argument("--backbone", type=str, default="vit_small_patch14_dinov2.lvd142m")

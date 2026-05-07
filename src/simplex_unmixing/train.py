@@ -383,7 +383,7 @@ def main() -> None:
     print(f"  sparsity:      {val_sparsity:.4f}")
 
     # ---- 9. save artifacts -----------------------------------------------------------
-    model_path = output_dir / "bids_model.pt"
+    model_path = output_dir / "phoebi_model.pt"
     torch.save(model.state_dict(), model_path)
 
     save_json(

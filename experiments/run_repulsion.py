@@ -38,7 +38,7 @@ from baselines.supervised_multilabel_heldout import (
     DEFAULT_HELDOUT_COUNTS, parse_heldout_counts, select_heldout,
 )
 from tools.build_splits import discover_class_names
-from experiments.run_bids_heldout import (
+from experiments.run_phoebi_heldout import (
     collect_entries, image_level_90_10, split_lists,
     hybrid_prototype_init, quantile_thresholds,
 )

@@ -1,6 +1,6 @@
-# BIDS
+# PHOEBI
 
-Code for the BIDS framework: open-world multi-label identification of mixed
+Code for the PHOEBI framework: open-world multi-label identification of mixed
 bacterial cultures from phase-contrast microscopy images. Three lightweight
 decoders sit on identical frozen DINOv2-S/14 tile features and share one
 geometric scaffold, the **Spatial Homogeneity assumption (H)**: for any image
@@ -18,9 +18,8 @@ The repository contains:
 - The tooling that ingests microscopy sessions into the splits the paper uses,
   packages the dataset for release, and regenerates the paper figures (`tools/`).
 
-The dataset (~22 GB, CC BY 4.0) is hosted separately at
-https://huggingface.co/datasets/PLACEHOLDER/BIDS
-<!-- Update this URL after uploading to your HF account -->
+The dataset (~15 GB, CC BY 4.0) is hosted separately at
+https://huggingface.co/datasets/AnonymousResearchTiger/PHOEBI
 
 ## Install
 
@@ -52,12 +51,11 @@ All three reuse the same shared front-end:
 ```
 data/
 ├── images/<combo>/00001.jpg             # 1024×1024 images (~120,000 total)
-├── images_retakes/<combo>_takeN/        # retake images (~48,000 total)
 ├── images_256/<combo>/00001.jpg         # 256×256 downsampled (supervised baselines only)
-└── splits.json                          # temporal 80/10/10, paths → images/
+└── splits.json                          # 80/10/10 split, paths → images/
 ```
 
-Filenames encode the label: `bs_ka_fj.mp4` → `[bs, ka, fj]` present. Six
+Filenames encode the label: `bs_ka_fj` → `[bs, ka, fj]` present. Six
 species in 40 combinations of orders 1 to 6; three pairwise combinations
 (`bs+bt`, `bt+fj`, `ka+pf`) and the five-species combinations were not
 collected and are absent from the release.
@@ -71,7 +69,7 @@ collected and are absent from the release.
 The HF dataset archive contains the 1024×1024 images at
 `images/<combo>/00001.jpg` and the matching `splits.json`. Extract
 `images.tar.gz` under `data/` next to this code (or pass
-`--frames_dir`/`--splits_path` to point at any other location).
+`--images_dir`/`--splits_path` to point at any other location).
 
 ## Quick start
 
@@ -95,13 +93,12 @@ python -m src.mc_channel.test_eval                              --model_dir outp
 
 | Table / Figure                      | Driver                                                                                     |
 |-------------------------------------|--------------------------------------------------------------------------------------------|
-| LCO compositional collapse (Table)  | `python experiments/run_bids_heldout.py --output_dir outputs/bids_heldout`                 |
+| LCO compositional collapse (Table)  | `python experiments/run_phoebi_heldout.py --output_dir outputs/phoebi_heldout`             |
 | Supervised LCO baselines            | `python baselines/supervised_multilabel_heldout.py --backbone resnet50.a1_in1k --output_dir outputs/supervised_multilabel_heldout/resnet50` |
 | 13-encoder linear probe             | `python -m baselines.multilabel_probe --epochs 10` and `python -m baselines.multilabel_probe_bio --epochs 10` |
 | LOOCV open-set                      | `python experiments/run_openset_detection.py`                                              |
 | LOOCV discovery (SK K=1, canonical) | `python experiments/run_discovery.py --output_dir outputs/discovery_loocv_sk_k1 --cluster_method sinkhorn --sinkhorn_k 1 --residual_threshold 0.15` |
 | 5-way OSR score sweep               | `python experiments/run_osr_score_sweep.py`                                                |
-| Cross-session retake test           | `python experiments/run_retake_robustness.py`                                              |
 | Tile-count and ablation grids       | `python experiments/run_ablations.py`                                                      |
 | Per-class learnable temperature     | `python experiments/run_learned_tau.py`                                                    |
 | Inter-prototype repulsion           | `python experiments/run_repulsion.py`                                                      |
@@ -116,7 +113,7 @@ The LCO split is canonical at seed 1337. The held-out 9 combinations are
 
 ## Design constraints
 
-These are non-negotiable design rules of BIDS, not preferences:
+These are non-negotiable design rules of PHOEBI, not preferences:
 
 1. **No proportion or composition estimation.** There is no ground truth for
    mixture ratios (species grow at different rates, so plated proportions do
@@ -124,8 +121,8 @@ These are non-negotiable design rules of BIDS, not preferences:
 2. **Real microscopy only.** All reported numbers come from real
    microscopy; there is no synthetic-data path.
 3. **Session-level splits.** Images from the same culture session are
-   temporally autocorrelated. Splits never mix images from the same session
-   across train / val / test.
+   correlated. Splits never mix images from the same session across
+   train / val / test.
 
 ## Repository layout
 
@@ -136,7 +133,7 @@ src/
 ├── prototype_matching/ # method B
 └── mc_channel/         # method C
 
-experiments/            # LCO, LOOCV open-set + discovery, ablations, calibration, retake
+experiments/            # LCO, LOOCV open-set + discovery, ablations, calibration
 baselines/              # 13-encoder probe, supervised LCO fine-tunes, attention-MIL
 tools/                  # data ingest, splits builder, dataset packaging
 ```
@@ -148,9 +145,9 @@ between runs to skip re-extraction when the key matches.
 ## Citation
 
 ```bibtex
-@misc{bids2026,
-  title        = {{BIDS}: A Phase-Contrast Microscopy Benchmark for
-                  Open-World Bacterial Identification},
+@misc{phoebi2026,
+  title        = {{PHOEBI}: An Open-World Benchmark for Bacterial Identification
+                  in Phase-Contrast Microscopy},
   author       = {Anonymous Authors},
   year         = {2026},
   note         = {Under review at the NeurIPS 2026 Datasets and Benchmarks Track},

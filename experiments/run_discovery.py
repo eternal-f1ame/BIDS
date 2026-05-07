@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pillar 3 of BIDS: Novel Class Discovery (LOOCV protocol).
+"""Pillar 3 of PHOEBI: Novel Class Discovery (LOOCV protocol).
 
 For each held-out species k:
   1. Train Method A on K-1 known species (pure-culture init, like the LOOCV
@@ -86,7 +86,7 @@ def simgcd_propose(
     sk_epsilon: float,
     device: torch.device,
 ) -> torch.Tensor:
-    """SimGCD-style adaptation for BIDS LOOCV (K_novel = 1 by default).
+    """SimGCD-style adaptation for PHOEBI LOOCV (K_novel = 1 by default).
 
     Trains a (K_known + K_novel)-way classifier head on top of frozen DINOv2
     features. Loss = w_labeled * BCE(supervised, train tiles)
@@ -672,7 +672,7 @@ def run_fold(
 # Main
 # ---------------------------------------------------------------------------
 def main():
-    parser = argparse.ArgumentParser(description="BIDS Pillar 3: NCD harness")
+    parser = argparse.ArgumentParser(description="PHOEBI Pillar 3: NCD harness")
     parser.add_argument("--splits_path", type=str, default="data/splits.json")
     parser.add_argument("--output_dir", type=str, default="outputs/discovery_loocv")
     parser.add_argument("--backbone", type=str, default="vit_small_patch14_dinov2.lvd142m")
@@ -702,7 +702,7 @@ def main():
 
     parser.add_argument("--cluster_method", type=str, default="greedy",
                         choices=["greedy", "sinkhorn", "uno_lite", "simgcd"],
-                        help="greedy: variable-K cosine clustering. sinkhorn: fixed-K balanced k-means. uno_lite: UNO-spirit (SK pseudo-labels + BCE-trained linear head as prototypes). simgcd: SimGCD-style adapted to BIDS LOOCV with K_novel=1 (BCE on labeled train tiles + SK soft pseudo-label CE on test tiles).")
+                        help="greedy: variable-K cosine clustering. sinkhorn: fixed-K balanced k-means. uno_lite: UNO-spirit (SK pseudo-labels + BCE-trained linear head as prototypes). simgcd: SimGCD-style adapted to PHOEBI LOOCV with K_novel=1 (BCE on labeled train tiles + SK soft pseudo-label CE on test tiles).")
     parser.add_argument("--sinkhorn_k", type=int, default=2,
                         help="number of novel-prototype candidates for SK / SimGCD clustering")
     parser.add_argument("--simgcd_epochs", type=int, default=30,

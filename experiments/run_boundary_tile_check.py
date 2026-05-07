@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Boundary-tile robustness check for Spatial Homogeneity (Assumption H).
 
-Reuses cached features from outputs/bids_heldout/features/ (seed 1337
+Reuses cached features from outputs/phoebi_heldout/features/ (seed 1337
 canonical, 4x4 grid). For each test image (16 tiles), compares per-image
 F1 under \methodB{} when using:
   (a) all 16 tiles (the full grid; canonical baseline)
@@ -68,7 +68,7 @@ def per_image_score_method_b(features, image_index, num_images, prototypes,
 
 def hybrid_prototype_init_from_arrays(train_features, train_image_index,
                                        train_labels, train_combos, class_names):
-    """Re-implementation of run_bids_heldout.hybrid_prototype_init."""
+    """Re-implementation of run_phoebi_heldout.hybrid_prototype_init."""
     K = len(class_names)
     D = train_features.shape[1]
     protos = torch.empty((K, D), dtype=train_features.dtype)
@@ -101,7 +101,7 @@ def quantile_thresholds(scores, labels, quantile=0.05):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--feature_dir", default="outputs/bids_heldout/features")
+    ap.add_argument("--feature_dir", default="outputs/phoebi_heldout/features")
     ap.add_argument("--frames_dir", default="data/images")
     ap.add_argument("--output_dir", default="outputs/boundary_tile_check")
     ap.add_argument("--seed", type=int, default=1337)
@@ -128,7 +128,7 @@ def main():
     from baselines.supervised_multilabel_heldout import (
         DEFAULT_HELDOUT_COUNTS, select_heldout,
     )
-    from experiments.run_bids_heldout import (
+    from experiments.run_phoebi_heldout import (
         collect_entries, image_level_90_10, split_lists,
     )
     from tools.build_splits import discover_class_names

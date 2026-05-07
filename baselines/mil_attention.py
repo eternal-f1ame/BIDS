@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Attention-based MIL baseline for BIDS, evaluated on both the random 80/10/10
+"""Attention-based MIL baseline for PHOEBI, evaluated on both the random 80/10/10
 split (Table 2 / random) and the leave-combinations-out split (Table 2 / heldout
 and Table 3).
 
@@ -11,14 +11,14 @@ The head is the gated attention pooling of Ilse et al., 2018 (eqs. 8 and 9):
     z   = sum_t a_t * h_t                                  # bag embedding
     y   = sigmoid(C z)                                     # K-dim presence logits
 
-The decoder is intentionally similar in spirit to the BIDS pipeline (per-tile
+The decoder is intentionally similar in spirit to the PHOEBI pipeline (per-tile
 features mean-aggregated to image-level under Assumption H) but the aggregation
 weights are now LEARNED with gradient flow into a per-image discriminative head,
 which is the design our anchor-based decoders are an alternative to.
 
-We share everything else with the BIDS decoders:
+We share everything else with the PHOEBI decoders:
   - Frozen DINOv2-S/14 features (cached, read directly from
-    outputs/bids_heldout/features/ or outputs/.../*_features_cache.pt)
+    outputs/phoebi_heldout/features/ or outputs/.../*_features_cache.pt)
   - 4x4 grid tiles at 224 px under divide-by-Gaussian illumination
   - Per-class thresholds calibrated on val by argmax-F1 (matches Method C, since
     this is also a gradient-trained discriminative head)
@@ -66,7 +66,7 @@ from baselines.supervised_multilabel_heldout import (
     parse_heldout_counts,
     select_heldout,
 )
-from experiments.run_bids_heldout import (
+from experiments.run_phoebi_heldout import (
     collect_entries,
     image_level_90_10,
     split_lists,
@@ -333,13 +333,13 @@ def run_random_split(args, device: str):
 
 def run_heldout(args, device: str):
     """Leave-9-combinations-out, identical to baselines/supervised_multilabel_heldout.py
-    selection (seed 1337). Uses the cached features from outputs/bids_heldout/features/."""
-    feats_dir = ROOT / "outputs/bids_heldout/features"
+    selection (seed 1337). Uses the cached features from outputs/phoebi_heldout/features/."""
+    feats_dir = ROOT / "outputs/phoebi_heldout/features"
     train_feats, train_idx, train_paths_cached = load_cached_features(feats_dir / "train.pt")
     val_feats, val_idx, val_paths_cached = load_cached_features(feats_dir / "val.pt")
     test_feats, test_idx, test_paths_cached = load_cached_features(feats_dir / "test.pt")
 
-    # Reproduce the SAME label assignment as run_bids_heldout.py
+    # Reproduce the SAME label assignment as run_phoebi_heldout.py
     frames_dir = ROOT / args.frames_dir
     class_names = discover_class_names(frames_dir)
     K = len(class_names)

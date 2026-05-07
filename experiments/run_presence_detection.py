@@ -47,7 +47,7 @@ def load_simplex_model(model_dir: Path, config: dict, device: torch.device):
     )
     model = UnmixerModel(model_cfg)
     model.load_state_dict(
-        torch.load(model_dir / "bids_model.pt", map_location=device, weights_only=True)
+        torch.load(model_dir / "phoebi_model.pt", map_location=device, weights_only=True)
     )
     model.to(device)
     model.eval()

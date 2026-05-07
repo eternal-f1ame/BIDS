@@ -1,4 +1,4 @@
-"""Multilabel presence/absence and open-set metrics for BIDS.
+"""Multilabel presence/absence and open-set metrics for PHOEBI.
 
 All metrics are strictly presence/absence — no proportion estimation. The headline
 classification metric is per-sample F1 (PlantCLEF style):

@@ -6,7 +6,7 @@ doubly-stochastic Q matrix whose rows sum to 1/K (uniform over prototypes)
 and whose columns sum to 1/B (uniform over samples). After re-scaling, each
 column is a soft assignment of one tile to one of K prototypes.
 
-Why this matters for BIDS discovery: the greedy cosine-clustering primitive
+Why this matters for PHOEBI discovery: the greedy cosine-clustering primitive
 in src/simplex_unmixing/model.py over-fragments (proposes ~28 prototypes per
 fold for one held-out class) because each seed greedily eats its neighbors
 without any global balance constraint. Sinkhorn-Knopp instead enforces

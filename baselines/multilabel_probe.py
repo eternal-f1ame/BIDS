@@ -1,6 +1,6 @@
 """Multi-label linear-probe baseline across vision encoders.
 
-For each frozen encoder, extracts tile features via the shared BIDS pipeline
+For each frozen encoder, extracts tile features via the shared PHOEBI pipeline
 (illumination-corrected + 4x4 grid tiling), trains a single `nn.Linear(D, K)`
 head with BCE, calibrates per-class thresholds on val, and scores test.
 
@@ -371,7 +371,7 @@ def render_latex_table(csv_path: str, tex_path: str) -> None:
         "\\small\n"
         "\\caption{Multi-label linear-probe across frozen vision encoders (test split, "
         "$6$-class). Each row: tile embeddings from the named backbone under the shared "
-        "BIDS tile+illumination pipeline, mean-pooled to image level, classified by a "
+        "PHOEBI tile+illumination pipeline, mean-pooled to image level, classified by a "
         "single \\texttt{nn.Linear(D,K)} BCE head trained on the train split with per-"
         "class thresholds tuned on val. Bold = best per column.}\n"
         "\\label{tab:encoder-probe}\n"

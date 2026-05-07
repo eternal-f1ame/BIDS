@@ -1,10 +1,10 @@
-"""Bio-foundation-model encoder probe for BIDS.
+"""Bio-foundation-model encoder probe for PHOEBI.
 
 Probes pathology/biomedical foundation models not available via timm:
   - Phikon (owkin/phikon): ViT-B/16 trained on 6M H&E tiles via DINO.
   - (UNI and others gated/unavailable on this machine.)
 
-Reuses the BIDS GPU illumination + 4×4 grid tiling pipeline and the same
+Reuses the PHOEBI GPU illumination + 4×4 grid tiling pipeline and the same
 linear-probe training as multilabel_probe.py. Appends rows to
 outputs/encoder_probe/results.csv and re-renders the LaTeX table.
 
@@ -120,7 +120,7 @@ def extract_bio_features(
     cache_path: Optional[str],
     backbone_tag: str,
 ) -> Tuple[torch.Tensor, torch.Tensor]:
-    """GPU extraction with BIDS illumination + deterministic grid tiling."""
+    """GPU extraction with PHOEBI illumination + deterministic grid tiling."""
     import warnings
     from src.common.tiling import TileConfig, FullFrameDataset, _grid_offsets
     from src.common.illumination import gpu_normalize_illumination

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Calibration and per-species confusion analysis for held-out test set.
 
-Reads score arrays from outputs/bids_heldout/ and computes:
+Reads score arrays from outputs/phoebi_heldout/ and computes:
 1. Per-species reliability statistics (calibration) for Methods A, B, C
 2. Per-species FPR/FNR at the calibrated threshold (confusion breakdown)
 
-Writes outputs/bids_heldout_calibration.json and prints a summary table.
+Writes outputs/phoebi_heldout_calibration.json and prints a summary table.
 """
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from pathlib import Path
 
 import numpy as np
 
-SCORE_DIR = Path("outputs/bids_heldout")
+SCORE_DIR = Path("outputs/phoebi_heldout")
 RESULTS_JSON = SCORE_DIR / "results.json"
 
 
@@ -86,7 +86,7 @@ def main() -> None:
 
     # Save
     out = {"class_names": class_names, "per_method_per_species": results}
-    out_path = Path("outputs/bids_heldout_calibration.json")
+    out_path = Path("outputs/phoebi_heldout_calibration.json")
     out_path.write_text(json.dumps(out, indent=2))
     print(f"\nWrote {out_path}")
 
